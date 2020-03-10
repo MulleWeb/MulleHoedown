@@ -1,7 +1,25 @@
 #
 #
 #
-export PROJECT_NAME="MulleScion"
+export PROJECT_NAME="MulleHoedown"
+
+
+#
+#
+#
+export PROJECT_IDENTIFIER="MulleHoedown"
+
+
+#
+#
+#
+export PROJECT_DOWNCASE_IDENTIFIER="mulle_hoedown"
+
+
+#
+#
+#
+export PROJECT_UPCASE_IDENTIFIER="MULLE_HOEDOWN"
 
 
 #
@@ -32,23 +50,5 @@ export PROJECT_DIALECT="objc"
 #
 #
 export PROJECT_EXTENSIONS="m:aam"
-
-
-#
-#
-#
-export PROJECT_IDENTIFIER="MulleScion"
-
-
-#
-#
-#
-export PROJECT_DOWNCASE_IDENTIFIER="mulle_scion"
-
-
-#
-#
-#
-export PROJECT_UPCASE_IDENTIFIER="MULLE_SCION"
 
 

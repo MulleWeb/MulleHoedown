@@ -1,5 +1,5 @@
 //
-//  Hoedown.h
+//  NSData+MulleHoedown.m
 //  MulleScion
 //
 //  Created by Nat! on 17.02.15.
@@ -31,19 +31,45 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "import.h"
+#import "NSData+MulleHoedown.h"
+
+#include "document.h"
+#include "html.h"
 
 
-@interface Hoedown : NSObject
+#define READ_UNIT     1024
+#define OUTPUT_UNIT   256
+
+
+@implementation NSData (MulleHoedown)
+
+- (NSData *) hoedownedString
 {
-   NSMutableString  *_buf;
-   BOOL             _htmlEscape;
+   struct mulle_hoedown_buffer   *ob;
+   mulle_hoedown_renderer        *renderer;
+   mulle_hoedown_document        *document;
+   NSData                  *data;
+
+   /* performing markdown parsing */
+   ob = mulle_hoedown_buffer_new( OUTPUT_UNIT);
+
+   renderer = mulle_hoedown_html_renderer_new( 0, 0); // HOEDOWN_HTML_SKIP_HTML, 0);
+   document = mulle_hoedown_document_new( renderer, HOEDOWN_EXT_BLOCK|HOEDOWN_EXT_SPAN, 16);
+
+   mulle_hoedown_document_render( document, ob, [self bytes], [self length]);
+
+   data = [[[NSData alloc] initWithBytesNoCopy:ob->data
+                                        length:ob->size
+                                  freeWhenDone:YES] autorelease];
+   ob->data = NULL;
+   ob->size = 0;
+
+   mulle_hoedown_document_free( document);
+   mulle_hoedown_html_renderer_free( renderer);
+   mulle_hoedown_buffer_free( ob);
+
+   return( data);
 }
 
-+ (id) regularFilter;
-+ (id) htmlEscapedFilter;
-
-- (NSString *) hoedownedString;
-- (void) appendString:(NSString *) s;
-
 @end
+

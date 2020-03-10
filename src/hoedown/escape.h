@@ -14,11 +14,11 @@ extern "C" {
  * FUNCTIONS *
  *************/
 
-/* hoedown_escape_href: escape (part of) a URL inside HTML */
-void hoedown_escape_href(hoedown_buffer *ob, const uint8_t *data, size_t size);
+/* mulle_hoedown_escape_href: escape (part of) a URL inside HTML */
+void mulle_hoedown_escape_href(mulle_hoedown_buffer *ob, const uint8_t *data, size_t size);
 
-/* hoedown_escape_html: escape HTML */
-void hoedown_escape_html(hoedown_buffer *ob, const uint8_t *data, size_t size, int secure);
+/* mulle_hoedown_escape_html: escape HTML */
+void mulle_hoedown_escape_html(mulle_hoedown_buffer *ob, const uint8_t *data, size_t size, int secure);
 
 
 #ifdef __cplusplus

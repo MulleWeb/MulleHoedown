@@ -1,6 +1,6 @@
 //
-//  Hoedown.m
-//  MulleScion
+//  NSString+MulleHoedown.m
+//  MulleHoedown
 //
 //  Created by Nat! on 17.02.15.
 //  Copyright (c) 2015 Mulle kybernetiK. All rights reserved.
@@ -31,64 +31,22 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-#import "Hoedown.h"
-#import "NSData+Hoedown.h"
+#import "NSString+MulleHoedown.h"
+
+#import "NSData+MulleHoedown.h"
 
 
-#define READ_UNIT     1024
-#define OUTPUT_UNIT   256
-
-
-//
-// stupid hoedown lib can't do incremental rendering, so we have to
-// buffer everything
-//
-@implementation Hoedown
-
-- (id) init
-{
-   _buf = [NSMutableString new];
-   return( self);
-}
-
-- (id) initWithHTMLEscaping:(BOOL) flag
-{
-   self = [self init];
-   if( self)
-      self->_htmlEscape = flag;
-   return( self);
-}
-
-
-+ (id) regularFilter
-{
-   return( [[[self alloc] initWithHTMLEscaping:NO] autorelease]);
-}
-
-
-+ (id) htmlEscapedFilter
-{
-   return( [[[self alloc] initWithHTMLEscaping:YES] autorelease]);
-}
-
-
-- (void) dealloc
-{
-   [_buf release];
-   
-   [super dealloc];
-}
-
+@implementation NSString( MulleHoedown)
 
 - (NSString *) hoedownedString
 {
-   return( [_buf hoedownedString]);
-}
+   NSData       *data;
+   NSString     *s;
 
-
-- (void) appendString:(NSString *) s
-{
-   [_buf appendString:s];
+   data = [[self dataUsingEncoding:NSUTF8StringEncoding] hoedownedString];
+   s    = [[[NSString alloc] initWithData:data
+                                 encoding:NSUTF8StringEncoding] autorelease];
+   return( s);
 }
 
 @end
