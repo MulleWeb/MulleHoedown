@@ -1,4 +1,4 @@
-/* version.h - holds Hoedown's version */
+/* version.h - holds MulleHoedown's version */
 
 #ifndef HOEDOWN_VERSION_H
 #define HOEDOWN_VERSION_H
@@ -22,8 +22,8 @@ extern "C" {
  * FUNCTIONS *
  *************/
 
-/* hoedown_version: retrieve Hoedown's version numbers */
-void hoedown_version(int *major, int *minor, int *revision);
+/* mulle_hoedown_version: retrieve MulleHoedown's version numbers */
+void mulle_hoedown_version(int *major, int *minor, int *revision);
 
 
 #ifdef __cplusplus

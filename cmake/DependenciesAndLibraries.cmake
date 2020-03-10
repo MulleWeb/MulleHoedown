@@ -1,3 +1,7 @@
+if( MULLE_TRACE_INCLUDE)
+   message( STATUS "# Include \"${CMAKE_CURRENT_LIST_FILE}\"" )
+endif()
+   
 #
 # The following includes include definitions generated
 # during `mulle-sde update`. Don't edit those files. They are
@@ -18,14 +22,3 @@ include( _Libraries OPTIONAL)
 # Add OS specific dependencies to OS_SPECIFIC_LIBRARIES
 # Add all other dependencies (rest) to DEPENDENCY_LIBRARIES
 #
-if( APPLE AND NOT FOUNDATION_LIBRARY)
-   find_library( FOUNDATION_LIBRARY Foundation)
-   if( FOUNDATION_LIBRARY)
-      set( DEPENDENCY_LIBRARIES
-         ${DEPENDENCY_LIBRARIES}
-         ${FOUNDATION_LIBRARY}
-         CACHE INTERNAL "need to cache this"
-      )
-   endif()
-   message( STATUS "FOUNDATION_LIBRARY is \"${FOUNDATION_LIBRARY}\"")
-endif()

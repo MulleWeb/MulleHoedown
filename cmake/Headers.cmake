@@ -14,15 +14,15 @@ include( _Headers OPTIONAL)
 
 
 # add ignored headers back in so that the generators pick them up
-if( EXISTS "src/_MulleScion-import.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/_MulleHoedown-import.h")
    set( PUBLIC_HEADERS
-      "src/_MulleScion-include.h"
+      "src/_MulleHoedown-import.h"
       ${PUBLIC_HEADERS}
    )
 endif()
-if( EXISTS "src/_MulleScion-include.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/_MulleHoedown-include.h")
    set( PUBLIC_HEADERS
-      "src/_MulleScion-include.h"
+      "src/_MulleHoedown-include.h"
       ${PUBLIC_HEADERS}
    )
 endif()
@@ -42,15 +42,15 @@ if( INSTALL_PRIVATE_HEADERS)
 endif()
 
 # add ignored headers back in so that the generators pick them up
-if( EXISTS "src/_MulleScion-import-private.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/_MulleHoedown-import-private.h")
    set( PRIVATE_HEADERS
-      "src/_MulleScion-include-private.h"
+      "src/_MulleHoedown-import-private.h"
       ${PRIVATE_HEADERS}
    )
 endif()
-if( EXISTS "src/_MulleScion-include-private.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/_MulleHoedown-include-private.h")
    set( PRIVATE_HEADERS
-      "src/_MulleScion-include-private.h"
+      "src/_MulleHoedown-include-private.h"
       ${PRIVATE_HEADERS}
    )
 endif()

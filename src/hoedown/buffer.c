@@ -6,7 +6,7 @@
 #include <assert.h>
 
 void *
-hoedown_malloc(size_t size)
+mulle_hoedown_malloc(size_t size)
 {
 	void *ret = malloc(size);
 
@@ -19,7 +19,7 @@ hoedown_malloc(size_t size)
 }
 
 void *
-hoedown_calloc(size_t nmemb, size_t size)
+mulle_hoedown_calloc(size_t nmemb, size_t size)
 {
 	void *ret = calloc(nmemb, size);
 
@@ -32,7 +32,7 @@ hoedown_calloc(size_t nmemb, size_t size)
 }
 
 void *
-hoedown_realloc(void *ptr, size_t size)
+mulle_hoedown_realloc(void *ptr, size_t size)
 {
 	void *ret = realloc(ptr, size);
 
@@ -45,12 +45,12 @@ hoedown_realloc(void *ptr, size_t size)
 }
 
 void
-hoedown_buffer_init(
-	hoedown_buffer *buf,
+mulle_hoedown_buffer_init(
+	mulle_hoedown_buffer *buf,
 	size_t unit,
-	hoedown_realloc_callback data_realloc,
-	hoedown_free_callback data_free,
-	hoedown_free_callback buffer_free)
+	mulle_hoedown_realloc_callback data_realloc,
+	mulle_hoedown_free_callback data_free,
+	mulle_hoedown_free_callback buffer_free)
 {
 	assert(buf);
 
@@ -62,16 +62,16 @@ hoedown_buffer_init(
 	buf->buffer_free = buffer_free;
 }
 
-hoedown_buffer *
-hoedown_buffer_new(size_t unit)
+mulle_hoedown_buffer *
+mulle_hoedown_buffer_new(size_t unit)
 {
-	hoedown_buffer *ret = hoedown_malloc(sizeof (hoedown_buffer));
-	hoedown_buffer_init(ret, unit, hoedown_realloc, free, free);
+	mulle_hoedown_buffer *ret = mulle_hoedown_malloc(sizeof (mulle_hoedown_buffer));
+	mulle_hoedown_buffer_init(ret, unit, mulle_hoedown_realloc, free, free);
 	return ret;
 }
 
 void
-hoedown_buffer_free(hoedown_buffer *buf)
+mulle_hoedown_buffer_free(mulle_hoedown_buffer *buf)
 {
 	if (!buf) return;
 
@@ -82,7 +82,7 @@ hoedown_buffer_free(hoedown_buffer *buf)
 }
 
 void
-hoedown_buffer_reset(hoedown_buffer *buf)
+mulle_hoedown_buffer_reset(mulle_hoedown_buffer *buf)
 {
 	assert(buf && buf->unit);
 
@@ -92,7 +92,7 @@ hoedown_buffer_reset(hoedown_buffer *buf)
 }
 
 void
-hoedown_buffer_grow(hoedown_buffer *buf, size_t neosz)
+mulle_hoedown_buffer_grow(mulle_hoedown_buffer *buf, size_t neosz)
 {
 	size_t neoasz;
 	assert(buf && buf->unit);
@@ -109,68 +109,68 @@ hoedown_buffer_grow(hoedown_buffer *buf, size_t neosz)
 }
 
 void
-hoedown_buffer_put(hoedown_buffer *buf, const uint8_t *data, size_t size)
+mulle_hoedown_buffer_put(mulle_hoedown_buffer *buf, const uint8_t *data, size_t size)
 {
 	assert(buf && buf->unit);
 
 	if (buf->size + size > buf->asize)
-		hoedown_buffer_grow(buf, buf->size + size);
+		mulle_hoedown_buffer_grow(buf, buf->size + size);
 
 	memcpy(buf->data + buf->size, data, size);
 	buf->size += size;
 }
 
 void
-hoedown_buffer_puts(hoedown_buffer *buf, const char *str)
+mulle_hoedown_buffer_puts(mulle_hoedown_buffer *buf, const char *str)
 {
-	hoedown_buffer_put(buf, (const uint8_t *)str, strlen(str));
+	mulle_hoedown_buffer_put(buf, (const uint8_t *)str, strlen(str));
 }
 
 void
-hoedown_buffer_putc(hoedown_buffer *buf, uint8_t c)
+mulle_hoedown_buffer_putc(mulle_hoedown_buffer *buf, uint8_t c)
 {
 	assert(buf && buf->unit);
 
 	if (buf->size >= buf->asize)
-		hoedown_buffer_grow(buf, buf->size + 1);
+		mulle_hoedown_buffer_grow(buf, buf->size + 1);
 
 	buf->data[buf->size] = c;
 	buf->size += 1;
 }
 
 void
-hoedown_buffer_set(hoedown_buffer *buf, const uint8_t *data, size_t size)
+mulle_hoedown_buffer_set(mulle_hoedown_buffer *buf, const uint8_t *data, size_t size)
 {
 	assert(buf && buf->unit);
 
 	if (size > buf->asize)
-		hoedown_buffer_grow(buf, size);
+		mulle_hoedown_buffer_grow(buf, size);
 
 	memcpy(buf->data, data, size);
 	buf->size = size;
 }
 
 void
-hoedown_buffer_sets(hoedown_buffer *buf, const char *str)
+mulle_hoedown_buffer_sets(mulle_hoedown_buffer *buf, const char *str)
 {
-	hoedown_buffer_set(buf, (const uint8_t *)str, strlen(str));
+	mulle_hoedown_buffer_set(buf, (const uint8_t *)str, strlen(str));
 }
 
 int
-hoedown_buffer_eq(const hoedown_buffer *buf, const uint8_t *data, size_t size)
+mulle_hoedown_buffer_eq(const mulle_hoedown_buffer *buf, const uint8_t *data, size_t size)
 {
 	if (buf->size != size) return 0;
 	return memcmp(buf->data, data, size) == 0;
 }
 
 int
-hoedown_buffer_eqs(const hoedown_buffer *buf, const char *str)
+mulle_hoedown_buffer_eqs(const mulle_hoedown_buffer *buf, const char *str)
 {
-	return hoedown_buffer_eq(buf, (const uint8_t *)str, strlen(str));
+	return mulle_hoedown_buffer_eq(buf, (const uint8_t *)str, strlen(str));
 }
 
 int
-hoedown_buffer_prefix(const hoedown_buffer *buf, const char *prefix)
+mulle_hoedown_buffer_prefix(const mulle_hoedown_buffer *buf, const char *prefix)
 {
 	size_t i;
 
@@ -188,7 +188,7 @@ hoedown_buffer_prefix(const hoedown_buffer *buf, const char *prefix)
 }
 
 void
-hoedown_buffer_slurp(hoedown_buffer *buf, size_t size)
+mulle_hoedown_buffer_slurp(mulle_hoedown_buffer *buf, size_t size)
 {
 	assert(buf && buf->unit);
 
@@ -202,21 +202,21 @@ hoedown_buffer_slurp(hoedown_buffer *buf, size_t size)
 }
 
 const char *
-hoedown_buffer_cstr(hoedown_buffer *buf)
+mulle_hoedown_buffer_cstr(mulle_hoedown_buffer *buf)
 {
 	assert(buf && buf->unit);
 
 	if (buf->size < buf->asize && buf->data[buf->size] == 0)
 		return (char *)buf->data;
 
-	hoedown_buffer_grow(buf, buf->size + 1);
+	mulle_hoedown_buffer_grow(buf, buf->size + 1);
 	buf->data[buf->size] = 0;
 
 	return (char *)buf->data;
 }
 
 void
-hoedown_buffer_printf(hoedown_buffer *buf, const char *fmt, ...)
+mulle_hoedown_buffer_printf(mulle_hoedown_buffer *buf, const char *fmt, ...)
 {
 	va_list ap;
 	int n;
@@ -224,7 +224,7 @@ hoedown_buffer_printf(hoedown_buffer *buf, const char *fmt, ...)
 	assert(buf && buf->unit);
 
 	if (buf->size >= buf->asize)
-		hoedown_buffer_grow(buf, buf->size + 1);
+		mulle_hoedown_buffer_grow(buf, buf->size + 1);
 
 	va_start(ap, fmt);
 	n = vsnprintf((char *)buf->data + buf->size, buf->asize - buf->size, fmt, ap);
@@ -241,7 +241,7 @@ hoedown_buffer_printf(hoedown_buffer *buf, const char *fmt, ...)
 	}
 
 	if ((size_t)n >= buf->asize - buf->size) {
-		hoedown_buffer_grow(buf, buf->size + n + 1);
+		mulle_hoedown_buffer_grow(buf, buf->size + n + 1);
 
 		va_start(ap, fmt);
 		n = vsnprintf((char *)buf->data + buf->size, buf->asize - buf->size, fmt, ap);

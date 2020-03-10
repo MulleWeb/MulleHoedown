@@ -1,5 +1,5 @@
 //
-//  NSData+Hoedown.h
+//  NSData+MulleHoedown.h
 //  MulleScion
 //
 //  Created by Nat! on 17.02.15.
@@ -34,16 +34,9 @@
 #import "import.h"
 
 
-@interface NSData (Hoedown)
+@interface NSData (MulleHoedown)
 
 - (NSData *) hoedownedString;
 
 @end
 
-
-@interface NSString (Hoedown)
-
-- (NSString *) hoedownedString;
-- (NSString *) scionHoedownedString:(BOOL) escaping;
-
-@end

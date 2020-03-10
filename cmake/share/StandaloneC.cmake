@@ -27,7 +27,7 @@ if( STANDALONE)
    endif()
 
    if( NOT STANDALONE_DEFINITIONS)
-      set( STANDALONE_DEFINITIONS ${MULLE_SCION_DEFINITIONS})
+      set( STANDALONE_DEFINITIONS ${MULLE_HOEDOWN_DEFINITIONS})
    endif()
 
    #
@@ -66,7 +66,7 @@ if( STANDALONE)
       if( NOT STANDALONE_SOURCES)
          message( FATAL_ERROR "You need to define STANDALONE_SOURCES. Add a file
 ${STANDALONE_LIBRARY_NAME}.c with contents like this to it:
-int  ___mulle_scion_unused__;
+int  ___mulle_hoedown_unused__;
 and everybody will be happy")
       endif()
 

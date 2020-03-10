@@ -54,7 +54,7 @@ static const uint8_t HREF_SAFE[UINT8_MAX+1] = {
 };
 
 void
-hoedown_escape_href(hoedown_buffer *ob, const uint8_t *data, size_t size)
+mulle_hoedown_escape_href(mulle_hoedown_buffer *ob, const uint8_t *data, size_t size)
 {
 	static const char hex_chars[] = "0123456789ABCDEF";
 	size_t  i = 0, mark;
@@ -68,12 +68,12 @@ hoedown_escape_href(hoedown_buffer *ob, const uint8_t *data, size_t size)
 
 		/* Optimization for cases where there's nothing to escape */
 		if (mark == 0 && i >= size) {
-			hoedown_buffer_put(ob, data, size);
+			mulle_hoedown_buffer_put(ob, data, size);
 			return;
 		}
 
 		if (likely(i > mark)) {
-			hoedown_buffer_put(ob, data + mark, i - mark);
+			mulle_hoedown_buffer_put(ob, data + mark, i - mark);
 		}
 
 		/* escaping */
@@ -100,7 +100,7 @@ hoedown_escape_href(hoedown_buffer *ob, const uint8_t *data, size_t size)
 		 * when building GET strings */
 #if 0
 		case ' ':
-			hoedown_buffer_putc(ob, '+');
+			mulle_hoedown_buffer_putc(ob, '+');
 			break;
 #endif
 
@@ -108,7 +108,7 @@ hoedown_escape_href(hoedown_buffer *ob, const uint8_t *data, size_t size)
 		default:
 			hex_str[1] = hex_chars[(data[i] >> 4) & 0xF];
 			hex_str[2] = hex_chars[data[i] & 0xF];
-			hoedown_buffer_put(ob, (uint8_t *)hex_str, 3);
+			mulle_hoedown_buffer_put(ob, (uint8_t *)hex_str, 3);
 		}
 
 		i++;
@@ -157,7 +157,7 @@ static const char *HTML_ESCAPES[] = {
 };
 
 void
-hoedown_escape_html(hoedown_buffer *ob, const uint8_t *data, size_t size, int secure)
+mulle_hoedown_escape_html(mulle_hoedown_buffer *ob, const uint8_t *data, size_t size, int secure)
 {
 	size_t i = 0, mark;
 
@@ -167,20 +167,20 @@ hoedown_escape_html(hoedown_buffer *ob, const uint8_t *data, size_t size, int se
 
 		/* Optimization for cases where there's nothing to escape */
 		if (mark == 0 && i >= size) {
-			hoedown_buffer_put(ob, data, size);
+			mulle_hoedown_buffer_put(ob, data, size);
 			return;
 		}
 
 		if (likely(i > mark))
-			hoedown_buffer_put(ob, data + mark, i - mark);
+			mulle_hoedown_buffer_put(ob, data + mark, i - mark);
 
 		if (i >= size) break;
 
 		/* The forward slash is only escaped in secure mode */
 		if (!secure && data[i] == '/') {
-			hoedown_buffer_putc(ob, '/');
+			mulle_hoedown_buffer_putc(ob, '/');
 		} else {
-			hoedown_buffer_puts(ob, HTML_ESCAPES[HTML_ESCAPE_TABLE[data[i]]]);
+			mulle_hoedown_buffer_puts(ob, HTML_ESCAPES[HTML_ESCAPE_TABLE[data[i]]]);
 		}
 
 		i++;
