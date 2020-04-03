@@ -27,7 +27,7 @@ if( STANDALONE)
    endif()
 
    if( NOT STANDALONE_DEFINITIONS)
-      set( STANDALONE_DEFINITIONS ${MULLE_HOEDOWN_DEFINITIONS})
+      set( STANDALONE_DEFINITIONS ${mulle_hoedown_DEFINITIONS})
    endif()
 
    #
