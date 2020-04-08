@@ -11,7 +11,7 @@ endif()
 # Disable with: `mulle-sourcetree mark MulleObjCHTTPFoundation no-link`
 #
 if( NOT MULLE_OBJC_HTTP_FOUNDATION_LIBRARY)
-   find_library( MULLE_OBJC_HTTP_FOUNDATION_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjCHTTPFoundation${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjCHTTPFoundation NO_CMAKE_SYSTEM_PATH)
+   find_library( MULLE_OBJC_HTTP_FOUNDATION_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjCHTTPFoundation${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjCHTTPFoundation NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
    message( STATUS "MULLE_OBJC_HTTP_FOUNDATION_LIBRARY is ${MULLE_OBJC_HTTP_FOUNDATION_LIBRARY}")
    #
    # The order looks ascending, but due to the way this file is read
@@ -19,7 +19,7 @@ if( NOT MULLE_OBJC_HTTP_FOUNDATION_LIBRARY)
    #
    if( MULLE_OBJC_HTTP_FOUNDATION_LIBRARY)
       #
-      # Add to MULLE_OBJC_HTTP_FOUNDATION_LIBRARY to ALL_LOAD_DEPENDENCY_LIBRARIES list.
+      # Add MULLE_OBJC_HTTP_FOUNDATION_LIBRARY to ALL_LOAD_DEPENDENCY_LIBRARIES list.
       # Disable with: `mulle-sourcetree mark MulleObjCHTTPFoundation no-cmakeadd`
       #
       set( ALL_LOAD_DEPENDENCY_LIBRARIES
@@ -69,7 +69,7 @@ if( NOT MULLE_OBJC_HTTP_FOUNDATION_LIBRARY)
          endif()
       endforeach()
       #
-      # Search for "objc-loader.inc" in include directory.
+      # Search for "MulleObjCLoader+<name>.h" in include directory.
       # Disable with: `mulle-sourcetree mark MulleObjCHTTPFoundation no-cmakeloader`
       #
       if( NOT NO_INHERIT_OBJC_LOADERS)
