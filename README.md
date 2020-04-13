@@ -1,42 +1,73 @@
 #  MulleHoedown
 
-#### 💃🏼 Markdown support for mulle-objc, based on the [hoedown](https://github.com/hoedown/hoedown) library.
+#### 💃🏼 Markdown support for mulle-objc
+
 
 Converts [markdown](https://en.wikipedia.org/wiki/Markdown) to HTML.
 
+Build Status | Release Version
+-------------|-----------------------------------
+[![Build Status](https://travis-ci.org/MulleWeb/MulleHoedown.svg?branch=release)](https://travis-ci.org/MulleWeb/MulleHoedown) | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleWeb/MulleHoedown.svg) [![Build Status](https://travis-ci.org/MulleWeb/MulleHoedown.svg?branch=release)](https://travis-ci.org/MulleWeb/MulleHoedown)
+
+
+## About
+
+MulleHowdown adds the following conversion method to **NSString**:
+
+```
+- (NSString *) hoedownedString;
+```
+
+and adds the following conversion method to **NSData**:
+
+```
+- (NSData *) hoedownedData;
+```
 
 #### Example:
 
-Use `[@"# VfL Bochum 1848" hoedownedString]` to produce HTML `<H1>VfL Bochum 1848</H1>`.
-
-
-## Build
-
-This is a [mulle-sde](https://mulle-sde.github.io/) project.
-
-It has it's own virtual environment, that will be automatically setup for you
-once you enter it with:
+This code
 
 ```
-mulle-sde MulleHoedown
+NSString   *html;
+NSString   *markdown;
+
+markdown = @"# VfL Bochum 1848";
+html     = [mardown hoedownedString];
+printf( "%s\n", [html UTF8String]);
 ```
 
-Now you can let **mulle-sde** fetch the required dependencies and build the
-project for you:
+will output the following HTML `<H1>VfL Bochum 1848</H1>`.
+
+
+
+## Add
+
+Use [mulle-sde](//github.com/mulle-sde) to add MulleHoedown to your project:
 
 ```
-mulle-sde craft
+mulle-sde dependency add --objc --github MulleWeb MulleHoedown
 ```
 
+## Install
+
+Use [mulle-sde](//github.com/mulle-sde) to build and install MulleHoedown
+and all its dependencies:
+
+```
+mulle-sde install --objc --prefix /usr/local \
+   https://github.com/MulleWeb/MulleHoedown/archive/latest.tar.gz
+```
 
 ## Acknowledgements
 
-hoedown comes with this license
+MulleHoeDown contains  the [hoedown](https://github.com/hoedown/hoedown), which
+comes with this copyright and license
 
 ```
 Copyright (c) 2008, Natacha Porté
 Copyright (c) 2011, Vicent Martí
-Copyright (c) 2014, Xavier Mendez, Devin Torres and the MulleHoedown authors
+Copyright (c) 2014, Xavier Mendez, Devin Torres and the hoedown authors
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
 copyright notice and this permission notice appear in all copies.
@@ -49,7 +80,7 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ```
 
-## Author
+## Authors
 
 [Nat!](//www.mulle-kybernetik.com/weblog) for
 [Mulle kybernetiK](//www.mulle-kybernetik.com) and
