@@ -43,7 +43,7 @@
    NSData       *data;
    NSString     *s;
 
-   data = [[self dataUsingEncoding:NSUTF8StringEncoding] hoedownedString];
+   data = [[self dataUsingEncoding:NSUTF8StringEncoding] hoedownedData];
    s    = [[[NSString alloc] initWithData:data
                                  encoding:NSUTF8StringEncoding] autorelease];
    return( s);

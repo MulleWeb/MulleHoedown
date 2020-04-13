@@ -1,3 +1,8 @@
+## 0.2.0
+
+* rename NSData method from hoedownedString to hoedownedData (duh)
+
+
 ## 0.1.0
 
 * split off from MulleScion

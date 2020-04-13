@@ -43,7 +43,7 @@
 
 @implementation NSData (MulleHoedown)
 
-- (NSData *) hoedownedString
+- (NSData *) hoedownedData
 {
    struct mulle_hoedown_buffer   *ob;
    mulle_hoedown_renderer        *renderer;
