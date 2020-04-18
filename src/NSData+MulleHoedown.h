@@ -36,7 +36,7 @@
 
 @interface NSData (MulleHoedown)
 
-- (NSData *) hoedownedString;
+- (NSData *) hoedownedData;
 
 @end
 
