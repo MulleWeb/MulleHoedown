@@ -12,8 +12,12 @@
 #ifndef _MulleHoedown_import_private_h__
 #define _MulleHoedown_import_private_h__
 
-#include "_MulleHoedown-include-private.h"
-
 /* no headers */
+
+#ifdef __has_include
+# if __has_include( "_MulleHoedown-include.h")
+#  include "_MulleHoedown-include-private.h"
+# endif
+#endif
 
 #endif
