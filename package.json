@@ -1,0 +1,16 @@
+{
+   "name" : "MulleHoedown",
+   "version" : "0.2.1",
+   "description" : "💃🏼 Markdown support for mulle-objc",
+   "homepage" : "https://github.com/MulleWeb/MulleHoedown",
+   "bugs" : "https://github.com/MulleWeb/MulleHoedown/issues",
+   "keywords" : [],
+   "license" : "UNLICENSED",
+   "repository" : {
+      "type" : "git",
+      "url" : "MulleWeb/MulleHoedown"
+   },
+   "dependencies" : {
+      "MulleObjCHTTPFoundation" : "MulleWeb/MulleObjCHTTPFoundation"
+   }
+}
