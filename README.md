@@ -33,7 +33,7 @@ NSString   *html;
 NSString   *markdown;
 
 markdown = @"# VfL Bochum 1848";
-html     = [mardown hoedownedString];
+html     = [markdown hoedownedString];
 printf( "%s\n", [html UTF8String]);
 ```
 
