@@ -7,19 +7,19 @@ export PROJECT_NAME="MulleHoedown"
 #
 #
 #
-export PROJECT_IDENTIFIER="MulleHoedown"
 
-
-#
-#
-#
-export PROJECT_DOWNCASE_IDENTIFIER="mulle_hoedown"
 
 
 #
 #
 #
-export PROJECT_UPCASE_IDENTIFIER="MULLE_HOEDOWN"
+
+
+
+#
+#
+#
+
 
 
 #

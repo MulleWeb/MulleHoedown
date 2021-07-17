@@ -35,7 +35,7 @@
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
 
-#define MULLE_HOEDOWN_VERSION ((0 << 20) | (2 << 8) | 2)
+#define MULLE_HOEDOWN_VERSION ((0 << 20) | (2 << 8) | 3)
 
 
 @interface MulleHoedown : NSObject
