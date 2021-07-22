@@ -15,7 +15,7 @@ endif()
 #
 # Generated from sourcetree: 31370884-173C-4A6D-946C-357A1C84D452;MulleObjCHTTPFoundation;no-singlephase;
 # Disable with : `mulle-sourcetree mark MulleObjCHTTPFoundation no-link`
-# Disable for this platform: `mulle-sourcetree mark MulleObjCHTTPFoundation no-cmake-platform-linux`
+# Disable for this platform: `mulle-sourcetree mark MulleObjCHTTPFoundation no-cmake-platform-darwin`
 #
 if( NOT MULLE_OBJC_HTTP_FOUNDATION_LIBRARY)
    find_library( MULLE_OBJC_HTTP_FOUNDATION_LIBRARY NAMES ${CMAKE_STATIC_LIBRARY_PREFIX}MulleObjCHTTPFoundation${CMAKE_STATIC_LIBRARY_SUFFIX} MulleObjCHTTPFoundation NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH)
