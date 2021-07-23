@@ -1,2 +1,1 @@
-MulleObjC;${MULLE_OBJC_NODETYPE:-tar};no-singlephase;D1D257E8-25AC-4FC9-A1D6-3BED3FD17A79;${MULLE_OBJC_URL:-https://github.com/mulle-objc/MulleObjC/archive/${MULLE_TAG}.tar.gz};${MULLE_OBJC_BRANCH};${MULLE_OBJC_TAG:-latest};;
-MulleFoundation;${MULLE_FOUNDATION_NODETYPE:-tar};no-singlephase;E36B3A9E-277B-423F-BA21-2424DA254AA1;${MULLE_FOUNDATION_URL:-https://github.com/MulleFoundation/MulleFoundation/archive/${MULLE_TAG}.tar.gz};${MULLE_FOUNDATION_BRANCH};${MULLE_FOUNDATION_TAG:-latest};;
+MulleFoundation;${MULLE_FOUNDATION_NODETYPE:-tar};no-singlephase;DAEB8AC6-0C3E-4DB3-9443-649B0FC38C9D;${MULLE_FOUNDATION_URL:-https://github.com/MulleFoundation/MulleFoundation/archive/${MULLE_TAG}.tar.gz};${MULLE_FOUNDATION_BRANCH};${MULLE_FOUNDATION_TAG:-latest};;
