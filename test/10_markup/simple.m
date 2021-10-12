@@ -3,6 +3,6 @@
 
 int   main( void)
 {
-   printf( "%s\n", [[@"# Headline" hoedownedString] cStringDescription]);
+   printf( "%s\n", [[@"# Headline" hoedownedString] UTF8String]);
    return( 0);
 }
