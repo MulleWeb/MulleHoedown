@@ -1,1 +1,1 @@
-MulleFoundation;${MULLE_FOUNDATION_NODETYPE:-tar};no-singlephase;DAEB8AC6-0C3E-4DB3-9443-649B0FC38C9D;${MULLE_FOUNDATION_URL:-https://github.com/MulleFoundation/MulleFoundation/archive/${MULLE_TAG}.tar.gz};${MULLE_FOUNDATION_BRANCH};${MULLE_FOUNDATION_TAG:-latest};;
+MulleFoundation;${MULLE_FOUNDATION_NODETYPE:-tar};no-singlephase;6EBBBB9F-C8A2-4173-AE99-62A7EAD658B5;${MULLE_FOUNDATION_URL:-https://github.com/MulleFoundation/MulleFoundation/archive/${MULLE_TAG}.tar.gz};${MULLE_FOUNDATION_BRANCH};${MULLE_FOUNDATION_TAG:-latest};;

@@ -38,19 +38,5 @@
 #define MULLE_HOEDOWN_VERSION ((0 << 20) | (2 << 8) | 3)
 
 
-@interface MulleHoedown : NSObject
-{
-   NSMutableString  *_buf;
-   BOOL             _htmlEscape;
-}
-
-+ (id) regularFilter;
-+ (id) htmlEscapedFilter;
-
-- (NSString *) hoedownedString;
-- (void) appendString:(NSString *) s;
-
-@end
-
 
 
