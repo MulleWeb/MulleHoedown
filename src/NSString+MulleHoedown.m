@@ -40,8 +40,8 @@
 
 - (NSString *) hoedownedString
 {
-   NSData       *data;
-   NSString     *s;
+   NSData     *data;
+   NSString   *s;
 
    data = [[self dataUsingEncoding:NSUTF8StringEncoding] hoedownedData];
    s    = [[[NSString alloc] initWithData:data
