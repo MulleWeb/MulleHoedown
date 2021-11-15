@@ -34,9 +34,11 @@
 #import "import.h"
 
 
-@interface NSData (MulleHoedown)
+@interface NSData( MulleHoedown)
 
 - (NSData *) hoedownedData;
-
+- (NSData *) hoedownedDataWithHTMLFlags:(NSUInteger) flags
+                             extensions:(NSUInteger) extensions
+                              tocIndent:(NSUInteger) indent;
 @end
 

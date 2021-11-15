@@ -37,24 +37,28 @@
 #include "html.h"
 
 
-#define READ_UNIT     1024
+//#define READ_UNIT     1024
 #define OUTPUT_UNIT   256
 
 
-@implementation NSData (MulleHoedown)
+@implementation NSData( MulleHoedown)
 
-- (NSData *) hoedownedData
+- (NSData *) hoedownedDataWithHTMLFlags:(NSUInteger) flags
+                             extensions:(NSUInteger) extensions
+                              tocIndent:(NSUInteger) indent
 {
    struct mulle_hoedown_buffer   *ob;
    mulle_hoedown_renderer        *renderer;
    mulle_hoedown_document        *document;
-   NSData                  *data;
+   NSData                        *data;
 
    /* performing markdown parsing */
    ob = mulle_hoedown_buffer_new( OUTPUT_UNIT);
 
-   renderer = mulle_hoedown_html_renderer_new( 0, 0); // HOEDOWN_HTML_SKIP_HTML, 0);
-   document = mulle_hoedown_document_new( renderer, HOEDOWN_EXT_BLOCK|HOEDOWN_EXT_SPAN, 16);
+   renderer = mulle_hoedown_html_renderer_new( flags, indent); // HOEDOWN_HTML_SKIP_HTML, 0);
+   document = mulle_hoedown_document_new( renderer,
+                                          extensions,
+                                          16);
 
    mulle_hoedown_document_render( document, ob, [self bytes], [self length]);
 
@@ -70,6 +74,15 @@
 
    return( data);
 }
+
+
+- (NSData *) hoedownedData
+{
+   return( [self hoedownedDataWithHTMLFlags:0
+                                 extensions:HOEDOWN_EXT_BLOCK|HOEDOWN_EXT_SPAN
+                                  tocIndent:0]);
+}
+
 
 @end
 
