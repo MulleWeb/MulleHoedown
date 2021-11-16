@@ -59,9 +59,11 @@ if( NOT __ENVIRONMENT__CMAKE__)
          )
       endif()
    else()
-      # temporary fix until mulle-objc 0.18 release
-      if( $ENV{MULLE_MAKE_VERSION} VERSION_LESS 0.14.0)
-         string( REPLACE ":" ";" MULLE_SDK_PATH "${MULLE_SDK_PATH}")
+      # temporary fix until mulle-objc 0.16 release
+      if( NOT "$ENV{MULLE_MAKE_VERSION}" STREQUAL "") 
+         if( "$ENV{MULLE_MAKE_VERSION}" VERSION_LESS 0.14.0)
+            string( REPLACE ":" ";" MULLE_SDK_PATH "${MULLE_SDK_PATH}")
+         endif()
       endif()
    endif()
 
@@ -72,7 +74,7 @@ if( NOT __ENVIRONMENT__CMAKE__)
 
    ###
    ### If you build DEBUG craftorder, but want RELEASE interspersed, so that
-   ### the debugger doesn't trace through too much fluff then set the
+   ### the debugger doesn't trace through too much fluff, then set the
    ### FALLBACK_BUILD_TYPE (for lack of a better name)
    ###
    ### TODO: reenable later
