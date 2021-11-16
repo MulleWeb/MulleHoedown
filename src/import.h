@@ -16,5 +16,9 @@
  */
 
 #import "_MulleHoedown-import.h"
+#ifndef MULLE_HOEDOWN_EXTERN_GLOBAL
+# define MULLE_HOEDOWN_EXTERN_GLOBAL MULLE_C_EXTERN_GLOBAL
+#endif
+
 
 /* You can add some more import statements here */
