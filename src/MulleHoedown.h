@@ -35,8 +35,11 @@
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
 
-#define MULLE_HOEDOWN_VERSION ((0 << 20) | (2 << 8) | 3)
+#define MULLE_HOEDOWN_VERSION ((0 << 20) | (2 << 8) | 4)
 
 
-
-
+#ifdef __has_include
+# if __has_include( "_MulleHoedown-versioncheck.h")
+#  include "_MulleHoedown-versioncheck.h"
+# endif
+#endif

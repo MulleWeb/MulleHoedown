@@ -1,3 +1,8 @@
+### 0.2.4
+
+* removed MulleHoedown class, which was useles
+* now only dependend on MulleObjCValueFoundation
+
 ### 0.2.3
 
 * Various small improvements
