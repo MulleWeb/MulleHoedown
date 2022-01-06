@@ -63,5 +63,6 @@ src/hoedown/escape.h
 src/hoedown/html.h
 src/hoedown/stack.h
 src/hoedown/version.h
+src/reflect/_MulleHoedown-versioncheck.h
 )
 
