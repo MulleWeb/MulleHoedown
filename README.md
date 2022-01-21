@@ -2,9 +2,11 @@
 
 #### 💃🏼 Markdown support for mulle-objc
 
-
 Converts [markdown](https://en.wikipedia.org/wiki/Markdown) to HTML.
-travis-ci.org/MulleWeb/MulleHoedown.svg?branch=release)](https://travis-ci.org/MulleWeb/MulleHoedown)
+
+Project      | Build Status
+-------------|-----------------------------------
+![Logo](https://raw.githubusercontent.com/MulleWeb/MulleHoedown/release/logo.png)| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleWeb/MulleHoedown.svg) [![Build Status](https://github.com/MulleWeb/MulleHoedown/workflows/CI/badge.svg?branch=release)](https://github.com/MulleWeb/MulleHoedown/actions)
 
 MulleHowdown adds the following conversion method to **NSString**:
 
