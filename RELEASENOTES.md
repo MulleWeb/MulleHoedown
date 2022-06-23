@@ -1,3 +1,7 @@
+### 0.2.5
+
+* moved generic headers into src/generic
+
 ### 0.2.4
 
 * removed MulleHoedown class, which was useles
