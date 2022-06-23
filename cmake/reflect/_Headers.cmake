@@ -12,6 +12,7 @@ endif()
 
 set( INCLUDE_DIRS
 src
+src/generic
 src/hoedown
 src/reflect
 )
@@ -28,7 +29,7 @@ src/reflect/_MulleHoedown-include-private.h
 # contents selected with patternfile ??-header--private-generic-headers
 #
 set( PRIVATE_GENERIC_HEADERS
-src/import-private.h
+src/generic/import-private.h
 )
 
 #
@@ -45,7 +46,7 @@ src/reflect/_MulleHoedown-provide.h
 # contents selected with patternfile ??-header--public-generic-headers
 #
 set( PUBLIC_GENERIC_HEADERS
-src/import.h
+src/generic/import.h
 )
 
 #
