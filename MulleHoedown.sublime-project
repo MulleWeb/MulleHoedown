@@ -25,7 +25,7 @@
             "dependency",
             "stash"
          ],
-         "binary_patterns":
+         /*"binary_patterns":
          [
             "*.o",
             "*.lib",
@@ -40,7 +40,13 @@
             "*.png",
             "*.jpg",
             "*.tiff"
-         ]
-      }
-   ]
+         ]*/
+      },
+      {
+			"path": "/home/src/srcO/MulleWeb/MulleCurl",
+		},
+      {
+			"path": "/home/src/srcO/MulleWeb/mulle-markdown-linkcheck"
+		},
+   ],
 }
