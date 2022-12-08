@@ -10,13 +10,13 @@ Project      | Build Status
 
 MulleHowdown adds the following conversion method to **NSString**:
 
-```
+``` objc
 - (NSString *) hoedownedString;
 ```
 
 and adds the following conversion method to **NSData**:
 
-```
+``` objc
 - (NSData *) hoedownedData;
 ```
 
@@ -30,7 +30,7 @@ and adds the following conversion method to **NSData**:
 
 This code
 
-```
+``` objc
 NSString   *html;
 NSString   *markdown;
 
@@ -46,7 +46,7 @@ will output the following HTML `<H1>VfL Bochum 1848</H1>`.
 
 Use [mulle-sde](//github.com/mulle-sde) to add MulleHoedown to your project:
 
-```
+``` sh
 mulle-sde dependency add --objc --github MulleWeb MulleHoedown
 ```
 
@@ -55,7 +55,7 @@ mulle-sde dependency add --objc --github MulleWeb MulleHoedown
 Use [mulle-sde](//github.com/mulle-sde) to build and install MulleHoedown
 and all its dependencies:
 
-```
+``` sh
 mulle-sde install --objc --prefix /usr/local \
    https://github.com/MulleWeb/MulleHoedown/archive/latest.tar.gz
 ```
