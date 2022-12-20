@@ -8,7 +8,7 @@
    "license" : "UNLICENSED",
    "repository" : {
       "type" : "git",
-      "url" : "MulleWeb/MulleHoedown"
+      "url" : "github:MulleWeb/MulleHoedown"
    },
    "dependencies" : {
       "MulleObjCValueFoundation" : "git://github.com/MulleFoundation/MulleObjCValueFoundation",
