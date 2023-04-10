@@ -1,0 +1,31 @@
+{
+   project =
+   {
+      description="💃🏼 Markdown support for mulle-objc";
+      domain="github";
+      name="MulleHoedown";
+      user="MulleWeb";
+      repo="MulleHoedown";
+      homepage="https://github.com/MulleWeb/MulleHoedown";
+      license="UNLICENSED"
+   };
+   dependencies =
+   (
+      {
+         description="🛸 MulleFoundationBase does something";
+         domain="github";
+         name="MulleFoundationBase";
+         repo="MulleFoundationBase";
+         url="https://github.com/MulleFoundation/MulleFoundationBase";
+         user="MulleFoundation";
+      },
+      {
+         description="📒 Lists mulle-objc runtime information contained in executables.";
+         domain="github";
+         name="mulle-objc-list";
+         repo="mulle-objc-list";
+         url="https://github.com/mulle-objc/mulle-objc-list";
+         user="mulle-objc";
+      }
+   )
+}

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-
+#include <mulle-slug/mulle-slug.h>
 #include "escape.h"
 
 #define USE_XHTML(opt) (opt->flags & HOEDOWN_HTML_USE_XHTML)
@@ -215,6 +215,7 @@ static void
 rndr_header(mulle_hoedown_buffer *ob, const mulle_hoedown_buffer *content, int level, const mulle_hoedown_renderer_data *data)
 {
 	mulle_hoedown_html_renderer_state *state = data->opaque;
+   struct mulle_utf8data   slug;
 
 	if (ob->size)
 		mulle_hoedown_buffer_putc(ob, '\n');
@@ -222,7 +223,14 @@ rndr_header(mulle_hoedown_buffer *ob, const mulle_hoedown_buffer *content, int l
 	if (level <= state->toc_data.nesting_level)
 		mulle_hoedown_buffer_printf(ob, "<h%d id=\"toc_%d\">", level, state->toc_data.header_count++);
 	else
-		mulle_hoedown_buffer_printf(ob, "<h%d>", level);
+   {
+      slug = mulle_utf8data_slugify( mulle_utf8data_make( content->data, content->size), NULL);
+      if( slug.length)
+   		mulle_hoedown_buffer_printf(ob, "<h%d id=\"%.*s\">", level, (int) slug.length, slug.characters);
+      else
+         mulle_hoedown_buffer_printf(ob, "<h%d>", level);
+      mulle_free( slug.characters);
+   }
 
 	if (content) mulle_hoedown_buffer_put(ob, content->data, content->size);
 	mulle_hoedown_buffer_printf(ob, "</h%d>\n", level);

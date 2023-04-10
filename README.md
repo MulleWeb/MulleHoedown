@@ -1,12 +1,21 @@
-#  MulleHoedown
+# MulleHoedown
 
 #### 💃🏼 Markdown support for mulle-objc
 
+
 Converts [markdown](https://en.wikipedia.org/wiki/Markdown) to HTML.
 
-Project      | Build Status
--------------|-----------------------------------
-![Logo](https://raw.githubusercontent.com/MulleWeb/MulleHoedown/release/logo.png)| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleWeb/MulleHoedown.svg) [![Build Status](https://github.com/MulleWeb/MulleHoedown/workflows/CI/badge.svg?branch=release)](https://github.com/MulleWeb/MulleHoedown/actions)
+
+| Release Version                                       | Release Notes
+|-------------------------------------------------------|--------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag//MulleHoedown.svg?branch=release) [![Build Status](https://github.com//MulleHoedown/workflows/CI/badge.svg?branch=release)](//github.com//MulleHoedown/actions)| [RELEASENOTES](RELEASENOTES.md) |
+
+
+
+
+
+
+## API
 
 MulleHowdown adds the following conversion method to **NSString**:
 
@@ -21,25 +30,15 @@ and adds the following conversion method to **NSData**:
 ```
 
 
-### You are here
 
+
+## Overview
 ![Overview](overview.dot.svg)
 
-
-#### Example:
-
-This code
-
-``` objc
-NSString   *html;
-NSString   *markdown;
-
-markdown = @"# VfL Bochum 1848";
-html     = [markdown hoedownedString];
-printf( "%s\n", [html UTF8String]);
-```
-
-will output the following HTML `<H1>VfL Bochum 1848</H1>`.
+| Requirement                                  | Description
+|----------------------------------------------|-----------------------
+| [MulleFoundationBase](https://github.com/MulleFoundation/MulleFoundationBase)             | 🛸 MulleFoundationBase does something
+| [mulle-objc-list](https://github.com/mulle-objc/mulle-objc-list)             | 📒 Lists mulle-objc runtime information contained in executables.
 
 
 ## Add
@@ -47,42 +46,43 @@ will output the following HTML `<H1>VfL Bochum 1848</H1>`.
 Use [mulle-sde](//github.com/mulle-sde) to add MulleHoedown to your project:
 
 ``` sh
-mulle-sde dependency add --objc --github MulleWeb MulleHoedown
+mulle-sde add github:MulleWeb/MulleHoedown
 ```
 
 ## Install
 
-Use [mulle-sde](//github.com/mulle-sde) to build and install MulleHoedown
-and all its dependencies:
+### Install with mulle-sde
+
+Use [mulle-sde](//github.com/mulle-sde) to build and install MulleHoedown and all dependencies:
 
 ``` sh
-mulle-sde install --objc --prefix /usr/local \
-   https://github.com/MulleWeb/MulleHoedown/archive/latest.tar.gz
+mulle-sde install --prefix /usr/local \
+   https://github.com//MulleHoedown/archive/latest.tar.gz
 ```
 
-## Acknowledgements
+### Manual Installation
 
-MulleHoeDown contains  the [hoedown](https://github.com/hoedown/hoedown), which
-comes with this copyright and license
+Install the [requirements](#Overview) and then install
+**MulleHoedown**
+with [cmake](https://cmake.org). Here `/usr/local` is chosen as the install
+prefix:
 
-```
-Copyright (c) 2008, Natacha Porté
-Copyright (c) 2011, Vicent Martí
-Copyright (c) 2014, Xavier Mendez, Devin Torres and the hoedown authors
-Permission to use, copy, modify, and distribute this software for any
-purpose with or without fee is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies.
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+``` sh
+cmake -B build \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      -DCMAKE_PREFIX_PATH=/usr/local \
+      -DCMAKE_BUILD_TYPE=Release &&
+cmake --build build --config Release &&
+cmake --install build --config Release
 ```
 
-## Authors
+## Platforms and Compilers
 
-[Nat!](//www.mulle-kybernetik.com/weblog) for
-[Mulle kybernetiK](//www.mulle-kybernetik.com) and
-[Codeon GmbH](//www.codeon.de)
+All platforms and compilers supported by
+[mulle-c11](//github.com/mulle-c/mulle-c11).
+
+
+## Author
+
+[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK
+
