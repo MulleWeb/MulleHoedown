@@ -1,0 +1,15 @@
+## API
+
+MulleHowdown adds the following conversion method to **NSString**:
+
+``` objc
+- (NSString *) hoedownedString;
+```
+
+and adds the following conversion method to **NSData**:
+
+``` objc
+- (NSData *) hoedownedData;
+```
+
+
