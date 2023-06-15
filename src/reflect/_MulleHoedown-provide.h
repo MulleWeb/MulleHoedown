@@ -9,6 +9,10 @@
  *
  *      mulle-sde environment set MULLE_MATCH_TO_C_RUN DISABLE
  */
+#ifndef mulle_hoedown_provide_h__
+#define mulle_hoedown_provide_h__
+
+
 #include "autolink.h"
 #include "buffer.h"
 #include "document.h"
@@ -16,3 +20,6 @@
 #include "html.h"
 #include "stack.h"
 #include "version.h"
+
+
+#endif
