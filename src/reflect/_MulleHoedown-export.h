@@ -9,6 +9,13 @@
  *
  *      mulle-sde environment set MULLE_MATCH_TO_C_RUN DISABLE
  */
+#ifndef mulle_hoedown_export_h__
+#define mulle_hoedown_export_h__
+
+
 #import "MulleObjCLoader+MulleHoedown.h"
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
+
+
+#endif

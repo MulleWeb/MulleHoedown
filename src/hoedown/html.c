@@ -224,7 +224,9 @@ rndr_header(mulle_hoedown_buffer *ob, const mulle_hoedown_buffer *content, int l
 		mulle_hoedown_buffer_printf(ob, "<h%d id=\"toc_%d\">", level, state->toc_data.header_count++);
 	else
    {
-      slug = mulle_utf8data_slugify( mulle_utf8data_make( content->data, content->size), NULL);
+      slug = mulle_utf8data_slugify( mulle_utf8data_make( (char *) content->data,
+                                                          content->size),
+                                     NULL);
       if( slug.length)
    		mulle_hoedown_buffer_printf(ob, "<h%d id=\"%.*s\">", level, (int) slug.length, slug.characters);
       else
