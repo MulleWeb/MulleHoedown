@@ -35,7 +35,7 @@
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
 
-#define MULLE_HOEDOWN_VERSION ((0 << 20) | (3 << 8) | 0)
+#define MULLE_HOEDOWN_VERSION ((0 << 20) | (3 << 8) | 1)
 
 
 #ifdef __has_include
