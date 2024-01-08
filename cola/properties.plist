@@ -7,7 +7,7 @@
       user="MulleWeb";
       repo="MulleHoedown";
       homepage="https://github.com/MulleWeb/MulleHoedown";
-      license="UNLICENSED"
+      license="BSD-3-Clause"
    };
    dependencies =
    (
