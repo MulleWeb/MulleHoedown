@@ -1,3 +1,7 @@
+### 0.3.1
+
+* Various small improvements
+
 ## 0.3.0
 
 * H1 and friends now have an anchor (via mulle-slug)
