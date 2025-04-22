@@ -37,6 +37,9 @@
 @interface NSData( MulleHoedown)
 
 - (NSData *) hoedownedData;
+
+// add 0x10000 on flags to convert local markdown (.md) links to HTML links
+// (.html)
 - (NSData *) hoedownedDataWithHTMLFlags:(NSUInteger) flags
                              extensions:(NSUInteger) extensions
                               tocIndent:(NSUInteger) indent;
