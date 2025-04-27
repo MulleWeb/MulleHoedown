@@ -41,3 +41,5 @@ cola/wilted/
 cmake-build-debug/
 .idea/
 *.bak
+.mulle/etc/make/build-dir
+vgcore.*

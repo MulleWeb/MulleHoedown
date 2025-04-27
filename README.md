@@ -6,9 +6,9 @@ Converts [markdown](https://en.wikipedia.org/wiki/Markdown) to HTML.
 
 
 
-| Release Version                                       | Release Notes
-|-------------------------------------------------------|--------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleWeb/MulleHoedown.svg) [![Build Status](https://github.com/MulleWeb/MulleHoedown/workflows/CI/badge.svg)](//github.com/MulleWeb/MulleHoedown/actions) | [RELEASENOTES](RELEASENOTES.md) |
+| Release Version                                       | Release Notes  | AI Documentation
+|-------------------------------------------------------|----------------|---------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleWeb/MulleHoedown.svg) [![Build Status](https://github.com/MulleWeb/MulleHoedown/workflows/CI/badge.svg)](//github.com/MulleWeb/MulleHoedown/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for MulleHoedown](https://deepwiki.com/MulleWeb/MulleHoedown)
 
 
 

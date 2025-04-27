@@ -92,7 +92,7 @@ static int
    HOEDOWN_BUFPUTSL(ob, ">");
    if (content && content->size)
    {
-      mulle_hoedown_escape_html(ob, content->data, content->size, 0);
+      mulle_hoedown_buffer_put(ob, content->data, content->size);
    }
    HOEDOWN_BUFPUTSL(ob, "</a>");
 
