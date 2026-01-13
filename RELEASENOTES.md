@@ -1,3 +1,7 @@
+### 0.4.1
+
+Various small improvements
+
 ## 0.4.0
 
 * rewrites local .md links to .html links now by default
