@@ -1,9 +1,9 @@
 {
    "name" : "MulleHoedown",
-   "version" : "0.3.1",
+   "version" : "0.4.1",
    "description" : "💃🏼 Markdown support for mulle-objc",
    "keywords" : [],
-   "license" : "BSD-3-Clause",
+   "license" : "UNLICENSED",
    "repo" : "MulleWeb/MulleHoedown",
    "src" : [
       "src/generic/import-private.h",

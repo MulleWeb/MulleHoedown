@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.13...99.99)
 
-project( MulleHoedown VERSION 0.4.0 LANGUAGES C)
+project( MulleHoedown VERSION 0.4.1 LANGUAGES C)
 
 
 
