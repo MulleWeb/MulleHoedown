@@ -54,7 +54,7 @@ src/generic/import.h
 #
 set( PUBLIC_HEADERS
 src/MulleHoedown.h
-src/MulleObjCLoader+MulleHoedown.h
+src/MulleObjCDeps+MulleHoedown.h
 src/NSData+MulleHoedown.h
 src/NSString+MulleHoedown.h
 src/hoedown/autolink.h

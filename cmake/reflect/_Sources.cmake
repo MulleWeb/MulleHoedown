@@ -28,5 +28,5 @@ src/hoedown/version.c
 # contents selected with patternfile ??-source--stage2-sources
 #
 set( STAGE2_SOURCES
-src/MulleObjCLoader+MulleHoedown.m
+src/MulleObjCDeps+MulleHoedown.m
 )
