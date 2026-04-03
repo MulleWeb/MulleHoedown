@@ -13,7 +13,7 @@
 #define _mulle_hoedown__export_h__
 
 
-#import "MulleObjCLoader+MulleHoedown.h"
+#import "MulleObjCDeps+MulleHoedown.h"
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
 
