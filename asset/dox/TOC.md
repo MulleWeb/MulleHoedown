@@ -1,250 +1,163 @@
 # MulleHoedown Library Documentation for AI
-
+<!-- Keywords: markdown, hoedown, renderer, NSString, NSData -->
 ## 1. Introduction & Purpose
 
-**MulleHoedown** is an Objective-C wrapper around the Hoedown Markdown parser, providing safe, configurable conversion from Markdown syntax to HTML. Hoedown is a fast, standards-compliant Markdown parser that supports CommonMark/GFM syntax, HTML escaping for security, and optional Markdown extensions (tables, strikethrough, footnotes, etc.).
-
-This library is particularly useful for:
-- User-generated content rendering in web applications
-- Documentation generation from Markdown source
-- Converting stored Markdown to displayable HTML
-- Building content management systems with Markdown support
+- MulleHoedown provides Markdown → HTML conversion for mulle-objc projects. It wraps the Hoedown C markdown engine and exposes convenient Objective-C categories on NSString and NSData while also shipping the underlying C API (buffers, document, HTML renderer).
+- Solves: quick conversion of markdown text to HTML and programmatic rendering with extension flags and custom renderers.
+- Key features: NSString/NSData categories for one-line conversion, fine-grained C API for custom rendering, Hoedown extension flags (tables, fenced code, autolink, etc.).
 
 ## 2. Key Concepts & Design Philosophy
 
-- **Safe HTML Generation**: Prevents script injection and malicious content by escaping HTML entities by default
-- **Extension Support**: Pluggable Markdown extensions (GFM tables, strikethrough, footnotes, highlight, quote, superscript, math)
-- **Flexible Flags**: Control HTML output format via bit flags (smart typography, skip HTML blocks, etc.)
-- **Link Transformation**: Built-in support for converting Markdown `.md` links to HTML `.html` links
-- **Category-based API**: Integrates naturally with NSString and NSData via Objective-C categories
+- Two-layer design: a small C core (ported Hoedown) that performs parsing & rendering; an Objective-C shim exposing convenience methods to Cocoa types.
+- Renderer callback model: the C API uses a mulle_hoedown_renderer struct with function pointers for block/span callbacks. Users supply callbacks to customize output.
+- Buffers: mulle_hoedown_buffer is a lightweight mutable byte buffer used throughout for input/output to avoid repeated allocations.
+- Extension-bitflags: feature selection is controlled by bitflags (mulle_hoedown_extensions) enabling/disabling fenced code, tables, autolink, etc.
 
 ## 3. Core API & Data Structures
 
-### NSString Category: `NSString( MulleHoedown)`
+### 3.1. [src/NSString+MulleHoedown.h]
 
-#### Basic Conversion
-- `- (NSString *) hoedownedString` → `NSString *`
-  - Converts Markdown string to HTML using default settings
-  - Safe by default (escapes HTML)
-  - Returns autoreleased NSString
-  - **Use case**: Simple one-off Markdown conversions
+- Method: - (NSString *) hoedownedString;
+  - Purpose: Convert the NSString's Markdown content into an HTML NSString using default flags.
+  - Usage: simplest entrypoint for Cocoa consumers (see tests/simple.m).
 
-#### Advanced Conversion
-- `- (NSData *) hoedownedDataWithHTMLFlags:(NSUInteger)flags extensions:(NSUInteger)extensions tocIndent:(NSUInteger)indent` → `NSData *`
-  - Full-featured conversion with granular control
-  - **flags**: Bit flags controlling HTML generation behavior (see 3.2)
-  - **extensions**: Bit flags enabling Markdown extensions (see 3.3)
-  - **tocIndent**: Indentation level for table-of-contents generation (0 disables TOC)
-  - Returns NSData in UTF-8 encoding
-  - **Use case**: Complex rendering with custom options
+### 3.2. [src/NSData+MulleHoedown.h]
 
-### NSData Category: `NSData( MulleHoedown)`
+- Methods:
+  - - (NSData *) hoedownedData;
+    - Purpose: Convert NSData containing UTF-8 Markdown to HTML NSData.
+  - - (NSData *) hoedownedDataWithHTMLFlags:(NSUInteger) flags
+                             extensions:(NSUInteger) extensions
+                              tocIndent:(NSUInteger) indent;
+    - Purpose: Full control conversion: render flags (escape, xhtml, hardwrap), extension bits and TOC indentation.
+    - Note: A special comment in header: add 0x10000 on flags to convert local ".md" links to ".html".
 
-#### Basic Conversion
-- `- (NSData *) hoedownedData` → `NSData *`
-  - Converts Markdown NSData to HTML NSData
-  - Equivalent to NSString's `hoedownedString` but preserves binary data
+### 3.3. [src/hoedown/document.h]
 
-#### Advanced Conversion  
-- `- (NSData *) hoedownedDataWithHTMLFlags:(NSUInteger)flags extensions:(NSUInteger)extensions tocIndent:(NSUInteger)indent` → `NSData *`
-  - See NSString variant above
-  - Useful when working with raw bytes or non-NSString Markdown sources
+- Types:
+  - mulle_hoedown_document: opaque document processor instance.
+  - mulle_hoedown_renderer: struct of callbacks used to render parsed nodes (blockcode, header, list, link, image, emphasis, math, etc.).
+  - mulle_hoedown_extensions: bitflags to enable features (HOEDOWN_EXT_TABLES, HOEDOWN_EXT_FENCED_CODE, HOEDOWN_EXT_AUTOLINK, etc.).
 
-### 3.2 HTML Flags (NSUInteger bit flags)
+- Lifecycle functions:
+  - mulle_hoedown_document_new(const mulle_hoedown_renderer *renderer, mulle_hoedown_extensions extensions, size_t max_nesting) -> malloc'ed document pointer.
+  - mulle_hoedown_document_render(doc, ob, data, size): render full Markdown.
+  - mulle_hoedown_document_render_inline(doc, ob, data, size): render inline-only Markdown.
+  - mulle_hoedown_document_free(doc): free document.
 
-Control how HTML is generated. Combine flags with bitwise OR (`|`):
+- Core operations: construct renderer struct (fill callbacks), create document with desired extensions, render into a mulle_hoedown_buffer.
 
-- `0x0001` - **SKIP_HTML**: Do not render raw HTML blocks (security)
-- `0x0002` - **ESCAPE**: Escape all HTML entities (redundant if using SKIP_HTML)
-- `0x0004` - **HARD_WRAP**: Convert line breaks to `<br>` tags
-- `0x0008` - **USE_XHTML**: Output XHTML-compliant tags (self-closing: `<br/>`)
-- `0x0010** - **PRETTIFY**: Pretty-print HTML with indentation
-- `0x0020` - **USE_SMARTYPANTS**: Convert quotes and dashes to typographic variants
-- `0x00FF` - All standard flags
-- `0x10000` - **LINK_CONVERSION**: Convert `.md` links to `.html` (special flag for documentation)
+### 3.4. [src/hoedown/buffer.h]
 
-### 3.3 Markdown Extensions (NSUInteger bit flags)
+- struct mulle_hoedown_buffer
+  - Fields: data (uint8_t *), size, asize (allocated size), unit (realloc unit), and allocator callbacks (data_realloc, data_free, buffer_free).
+- API:
+  - mulle_hoedown_buffer_init, _new, _reset, _grow, _put, _puts, _putc, _set, _sets, _eq, _eqs, _prefix, _slurp, _cstr, _printf, _free.
+- Semantics: chosen to minimize reallocations; optimized macros for literal puts.
 
-Enable Markdown syntax extensions. Combine with bitwise OR:
+### 3.5. [src/hoedown/html.h]
 
-- `0x0001` - **TABLES**: GFM pipe tables
-- `0x0002` - **FENCED_CODE**: Code blocks with triple backticks
-- `0x0004` - **FOOTNOTES**: Footnote syntax
-- `0x0008` - **HIGHLIGHT**: `==highlighted text==` syntax
-- `0x0010` - **QUOTE**: Block quotes
-- `0x0020` - **SUPERSCRIPT**: Superscript with `^`
-- `0x0040** - **STRIKETHROUGH**: `~~strikethrough~~` syntax
-- `0x0080` - **MATH**: Mathematical expressions (LaTeX-style)
-- `0x00FF` - All extensions enabled
+- HTML renderer helpers and flags (HOEDOWN_HTML_ESCAPE, HOEDOWN_HTML_USE_XHTML, HOEDOWN_HTML_HARD_WRAP, HOEDOWN_HTML_SKIP_HTML).
+- Constructors: mulle_hoedown_html_renderer_new(render_flags, nesting_level) and mulle_hoedown_html_toc_renderer_new(nesting_level) and free function.
+- Utilities: mulle_hoedown_html_smartypants and mulle_hoedown_html_is_tag.
 
 ## 4. Performance Characteristics
 
-- **Parsing Time**: O(n) where n = Markdown text length; typical: 1-5 ms for 10 KB of Markdown
-- **Memory**: O(n) for output buffer; no persistent structures retained after conversion
-- **CPU Efficiency**: Streaming parser with single pass through input
-- **Typical Throughput**: ~1-2 MB/s on modern hardware for average Markdown
-- **Memory Peak**: 2-3x input size during conversion (input + output buffers)
+- Rendering complexity: O(n) in input size for parsing + rendering (single pass style, callbacks per node).
+- Buffer operations: append (put/puts) amortized O(1) per byte; grow may reallocate (unit-driven).
+- Memory: document_new allocates renderer-specific state; buffers can be made volatile (asize == 0) to avoid ownership costs.
+- Thread-safety: not inherently thread-safe. Use separate document/buffer instances per thread or external synchronization.
 
 ## 5. AI Usage Recommendations & Patterns
 
-### Pattern 1: Simple Documentation Rendering
-For static documentation or help text, use the basic `hoedownedString` method without special flags.
-
-### Pattern 2: User-Generated Content (Secure)
-Always use `SKIP_HTML` flag to prevent script injection. Optionally use `ESCAPE` for defense-in-depth.
-```objc
-NSUInteger flags = 0x0001; // SKIP_HTML
-NSData *htmlData = [markdownData hoedownedDataWithHTMLFlags:flags extensions:0 tocIndent:0];
-```
-
-### Pattern 3: Rich Formatting with Extensions
-Enable strikethrough, tables, and fenced code for feature-rich Markdown support:
-```objc
-NSUInteger extensions = 0x0042; // FENCED_CODE + STRIKETHROUGH
-NSUInteger flags = 0x0004; // HARD_WRAP for line breaks
-NSData *htmlData = [markdownData hoedownedDataWithHTMLFlags:flags extensions:extensions tocIndent:0];
-```
-
-### Pattern 4: Documentation Site Generation
-Convert `.md` links to `.html` for static site generation:
-```objc
-NSUInteger flags = 0x10000; // LINK_CONVERSION
-NSData *htmlData = [markdownData hoedownedDataWithHTMLFlags:flags extensions:0x00FF tocIndent:0];
-```
-
-### Pattern 5: Table of Contents Generation
-Use `tocIndent` parameter to auto-generate TOC from heading hierarchy:
-```objc
-NSData *htmlData = [markdownData hoedownedDataWithHTMLFlags:0 extensions:0 tocIndent:2];
-// Generates nested `<ul>` from h1/h2/h3 headings
-```
-
-### Common Pitfalls
-- **Forgetting SKIP_HTML on user content**: Always sanitize untrusted input
-- **Not specifying encoding**: Use UTF-8 consistently
-- **Over-enabling extensions**: Each extension adds parsing complexity; enable only needed ones
-- **Assuming cached results invalidate**: Monitor when source Markdown changes
+- Best practice: For simple conversions prefer the Objective-C categories (NSString/NSData). For advanced customization use the C API to create renderer and supply callbacks.
+- Lifecycle: Always free document instances with mulle_hoedown_document_free and free buffers with mulle_hoedown_buffer_free when allocated.
+- Ownership: mulle_hoedown_buffer_cstr() returns a NUL-terminated pointer owned by the buffer; do not free the pointer separately.
+- Pitfalls:
+  - Do not call callbacks that assume thread-shared state without synchronization.
+  - Be cautious with extension bits; conflicting flags (negative flags) can disable behaviors.
+  - Categories yield autoreleased Objective-C objects; manage memory according to project conventions.
 
 ## 6. Integration Examples
 
-### Example 1: Simple Blog Post Rendering
-```objc
-#import <MulleFoundation/MulleFoundation.h>
-#import <MulleWeb/MulleHoedown.h>
+### Example 1: Converting NSString to HTML (from tests/simple.m)
 
-NSString *markdownContent = @"# Blog Post\n\nThis is **bold** and this is *italic*.";
-NSString *htmlOutput = [markdownContent hoedownedString];
-printf("%s\n", [htmlOutput UTF8String]);
-// Output: <h1>Blog Post</h1>\n<p>This is <strong>bold</strong> and this is <em>italic</em>.</p>
+```objc
+#import <MulleHoedown/MulleHoedown.h>
+
+int   main( void)
+{
+   mulle_printf( "%@\n", [@"- line1\n- line2\n" hoedownedString]);
+   return( 0);
+}
 ```
 
-### Example 2: Secure User Comment Processing
+### Example 2: Using NSData conversion with flags
+
 ```objc
-NSString *userComment = @"Check out <script>alert('xss')</script> my link";
-NSData *inputData = [userComment dataUsingEncoding:NSUTF8StringEncoding];
+#import <MulleHoedown/MulleHoedown.h>
 
-// Use SKIP_HTML flag to prevent script execution
-NSUInteger flags = 0x0001; // SKIP_HTML
-NSData *safeHTML = [inputData hoedownedDataWithHTMLFlags:flags extensions:0 tocIndent:0];
+int   main( void)
+{
+   NSData *data;
+   NSData *html;
 
-NSString *result = [[NSString alloc] initWithData:safeHTML encoding:NSUTF8StringEncoding];
-// <script> tag is rendered as escaped text, not executed
-[result release];
+   data = [@"# Title\n\nParagraph." dataUsingEncoding:NSUTF8StringEncoding];
+   html = [data hoedownedDataWithHTMLFlags:0
+                               extensions:HOEDOWN_EXT_FENCED_CODE | HOEDOWN_EXT_AUTOLINK
+                                tocIndent:2];
+   printf("%s\n", [[NSString alloc] initWithData:html encoding:NSUTF8StringEncoding].UTF8String);
+   return( 0);
+}
 ```
 
-### Example 3: Feature-Rich Documentation with Tables and Code
-```objc
-NSString *markdown = @"# API Reference\n\n## Methods\n\n| Method | Returns |\n|--------|----------|\n| foo() | NSString |\n\n```objc\nNSString *s = [obj foo];\n```";
+### Example 3: Creating a custom C renderer (sketch)
 
-NSData *input = [markdown dataUsingEncoding:NSUTF8StringEncoding];
-NSUInteger extensions = 0x0046; // FENCED_CODE + TABLES + STRIKETHROUGH
-NSData *html = [input hoedownedDataWithHTMLFlags:0 extensions:extensions tocIndent:0];
+```c
+#include "hoedown/document.h"
+#include "hoedown/buffer.h"
 
-NSString *result = [[NSString alloc] initWithData:html encoding:NSUTF8StringEncoding];
-printf("%s\n", [result UTF8String]);
-[result release];
-```
-
-### Example 4: Documentation Site Link Rewriting
-```objc
-NSString *markdown = @"[Read More](guide.md) or see [API](api.md)";
-NSData *input = [markdown dataUsingEncoding:NSUTF8StringEncoding];
-
-NSUInteger flags = 0x10000; // LINK_CONVERSION
-NSData *html = [input hoedownedDataWithHTMLFlags:flags extensions:0 tocIndent:0];
-
-NSString *result = [[NSString alloc] initWithData:html encoding:NSUTF8StringEncoding];
-// Links rewritten: guide.md → guide.html, api.md → api.html
-[result release];
-```
-
-### Example 5: Markdown to HTML Pipeline with Caching
-```objc
-@interface MarkdownCache : NSObject
-- (NSString *)cachedHTMLForMarkdown:(NSString *)markdown;
-@end
-
-@implementation MarkdownCache {
-    NSMutableDictionary *_cache;
+void my_paragraph(mulle_hoedown_buffer *ob, const mulle_hoedown_buffer *content, const mulle_hoedown_renderer_data *data)
+{
+   /* wrap paragraphs with a custom class */
+   mulle_hoedown_buffer_puts(ob, "<p class=\"my\">\n");
+   mulle_hoedown_buffer_put(ob, content->data, content->size);
+   mulle_hoedown_buffer_puts(ob, "</p>\n");
 }
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        _cache = [[NSMutableDictionary alloc] init];
-    }
-    return self;
+int main(void)
+{
+   mulle_hoedown_renderer renderer;
+   mulle_hoedown_buffer out;
+   mulle_hoedown_document *doc;
+
+   /* zero-init and set callbacks of interest */
+   memset(&renderer, 0, sizeof(renderer));
+   renderer.paragraph = my_paragraph;
+
+   mulle_hoedown_buffer_init(&out, 64, NULL, NULL, NULL);
+   doc = mulle_hoedown_document_new(&renderer, HOEDOWN_EXT_BLOCK | HOEDOWN_EXT_AUTOLINK, 16);
+
+   mulle_hoedown_document_render(doc, &out, (const uint8_t*)"Paragraph text", strlen("Paragraph text"));
+
+   printf("%s\n", mulle_hoedown_buffer_cstr(&out));
+
+   mulle_hoedown_document_free(doc);
+   mulle_hoedown_buffer_free(&out);
+   return(0);
 }
-
-- (NSString *)cachedHTMLForMarkdown:(NSString *)markdown {
-    NSString *hash = [markdown sha1Hash]; // pseudo-code
-    
-    NSString *cached = _cache[hash];
-    if (cached) return cached;
-    
-    NSData *input = [markdown dataUsingEncoding:NSUTF8StringEncoding];
-    NSUInteger flags = 0x0024; // HARD_WRAP + USE_SMARTYPANTS
-    NSUInteger extensions = 0x0046; // FENCED_CODE + TABLES + STRIKETHROUGH
-    NSData *html = [input hoedownedDataWithHTMLFlags:flags extensions:extensions tocIndent:0];
-    
-    NSString *result = [[NSString alloc] initWithData:html encoding:NSUTF8StringEncoding];
-    _cache[hash] = result;
-    [result release];
-    
-    return result;
-}
-
-- (void)dealloc {
-    [_cache release];
-    [super dealloc];
-}
-@end
-```
-
-### Example 6: Smart Typography Conversion
-```objc
-NSString *text = @"It's \"smart\" to use -- dashes... right?";
-NSData *input = [text dataUsingEncoding:NSUTF8StringEncoding];
-
-NSUInteger flags = 0x0020; // USE_SMARTYPANTS
-NSData *html = [input hoedownedDataWithHTMLFlags:flags extensions:0 tocIndent:0];
-
-NSString *result = [[NSString alloc] initWithData:html encoding:NSUTF8StringEncoding];
-printf("%s\n", [result UTF8String]);
-// Output: <p>It&rsquo;s &ldquo;smart&rdquo; to use &ndash; dashes&hellip; right?</p>
-[result release];
 ```
 
 ## 7. Dependencies
 
-- **MulleFoundation** - NSString, NSData base classes
-- **hoedown** - Embedded Markdown parsing library (C) - vendored, no external dependency
-- **mulle-objc** (runtime) - Objective-C runtime support
-- Standard C library
+- MulleFoundationBase (amalgamates Foundation projects used by the Objective-C parts)
+- mulle-objc-list (used at build/runtime for XCTest-like metadata)
+- mulle-c11 (platform C compatibility layer)
 
-## 8. Version Information
 
-MulleHoedown version macro: `MULLE_HOEDOWN_VERSION`
-- Format: `(major << 20) | (minor << 8) | patch`
-- Current: 0.4.0
+---
 
+References and pointers:
+- README.md for installation and high-level overview
+- test/ (10_markup, 20_features) for minimal usage examples
+- src/hoedown/*.h for full C API signatures
