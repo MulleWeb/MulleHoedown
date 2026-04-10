@@ -1,11 +1,12 @@
 {
    "name" : "MulleHoedown",
-   "version" : "0.4.1",
+   "version" : "0.5.0",
    "description" : "💃🏼 Markdown support for mulle-objc",
    "keywords" : [],
    "license" : "UNLICENSED",
    "repo" : "MulleWeb/MulleHoedown",
    "src" : [
+      "asset/dox/TOC.md",
       "src/generic/import-private.h",
       "src/generic/import.h",
       "src/hoedown/autolink.c",
