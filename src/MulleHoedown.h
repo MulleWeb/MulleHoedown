@@ -1,9 +1,11 @@
 //
 //  MulleHoedown.h
-//  MulleScion
+//  MulleHoedown
 //
-//  Created by Nat! on 17.02.15.
+//  Copyright (c) 2020 Nat! - Mulle kybernetiK.
 //  Copyright (c) 2015 Mulle kybernetiK. All rights reserved.
+//  All rights reserved.
+//
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -35,7 +37,7 @@
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
 
-#define MULLE_HOEDOWN_VERSION ((0UL << 20) | (5 << 8) | 1)
+#define MULLE_HOEDOWN_VERSION ((0UL << 20) | (5 << 8) | 2)
 
 
 #ifdef __has_include
