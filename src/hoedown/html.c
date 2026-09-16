@@ -43,6 +43,153 @@
 
 #define USE_XHTML(opt) (opt->flags & HOEDOWN_HTML_USE_XHTML)
 
+
+/*
+ * A curated set of the more common GitHub style emoji shortcodes. This is
+ * deliberately not the complete list: it is meant to be extended as needed.
+ * Shortcodes are matched by char_emoji as ":name:".
+ */
+struct mulle_hoedown_emoji
+{
+	const char   *name;
+	const char   *utf8;
+};
+
+static const struct mulle_hoedown_emoji   mulle_hoedown_emojis[] =
+{
+	{ "+1",                     "👍" },
+	{ "-1",                     "👎" },
+	{ "100",                    "💯" },
+	{ "alien",                  "👽" },
+	{ "anchor",                 "⚓" },
+	{ "angry",                  "😠" },
+	{ "apple",                  "🍎" },
+	{ "beer",                   "🍺" },
+	{ "beers",                  "🍻" },
+	{ "bell",                   "🔔" },
+	{ "bike",                   "🚲" },
+	{ "bird",                   "🐦" },
+	{ "blush",                  "😊" },
+	{ "boom",                   "💥" },
+	{ "broken_heart",           "💔" },
+	{ "bug",                    "🐛" },
+	{ "bulb",                   "💡" },
+	{ "cake",                   "🎂" },
+	{ "calendar",               "📅" },
+	{ "camera",                 "📷" },
+	{ "cat",                    "🐱" },
+	{ "clap",                   "👏" },
+	{ "cloud",                  "☁️" },
+	{ "coffee",                 "☕" },
+	{ "computer",               "💻" },
+	{ "cookie",                 "🍪" },
+	{ "cow",                    "🐮" },
+	{ "cry",                    "😢" },
+	{ "dizzy",                  "💫" },
+	{ "dog",                    "🐶" },
+	{ "earth_africa",           "🌍" },
+	{ "earth_americas",         "🌎" },
+	{ "earth_asia",             "🌏" },
+	{ "email",                  "✉️" },
+	{ "eyes",                   "👀" },
+	{ "fire",                   "🔥" },
+	{ "frog",                   "🐸" },
+	{ "gear",                   "⚙️" },
+	{ "ghost",                  "👻" },
+	{ "gift",                   "🎁" },
+	{ "grin",                   "😁" },
+	{ "hamburger",              "🍔" },
+	{ "hammer",                 "🔨" },
+	{ "hear_no_evil",           "🙉" },
+	{ "heart",                  "❤️" },
+	{ "heart_eyes",             "😍" },
+	{ "heavy_check_mark",       "✔️" },
+	{ "heavy_multiplication_x", "✖️" },
+	{ "hourglass",              "⌛" },
+	{ "joy",                    "😂" },
+	{ "key",                    "🔑" },
+	{ "kissing_heart",          "😘" },
+	{ "koala",                  "🐨" },
+	{ "laughing",               "😆" },
+	{ "link",                   "🔗" },
+	{ "lion",                   "🦁" },
+	{ "lock",                   "🔒" },
+	{ "mag",                    "🔍" },
+	{ "medal",                  "🏅" },
+	{ "memo",                   "📝" },
+	{ "monkey",                 "🐵" },
+	{ "moon",                   "🌙" },
+	{ "musical_note",           "🎵" },
+	{ "ok_hand",                "👌" },
+	{ "package",                "📦" },
+	{ "panda_face",             "🐼" },
+	{ "paperclip",              "📎" },
+	{ "pencil",                 "✏️" },
+	{ "penguin",                "🐧" },
+	{ "phone",                  "📱" },
+	{ "pig",                    "🐷" },
+	{ "pizza",                  "🍕" },
+	{ "poop",                   "💩" },
+	{ "pray",                   "🙏" },
+	{ "pushpin",                "📌" },
+	{ "rabbit",                 "🐰" },
+	{ "rage",                   "😡" },
+	{ "rainbow",                "🌈" },
+	{ "robot",                  "🤖" },
+	{ "rocket",                 "🚀" },
+	{ "rofl",                   "🤣" },
+	{ "scissors",               "✂️" },
+	{ "see_no_evil",            "🙈" },
+	{ "skull",                  "💀" },
+	{ "smile",                  "😄" },
+	{ "smiley",                 "😃" },
+	{ "smirk",                  "😏" },
+	{ "snowflake",              "❄️" },
+	{ "sob",                    "😭" },
+	{ "soccer",                 "⚽" },
+	{ "speak_no_evil",          "🙊" },
+	{ "sparkles",               "✨" },
+	{ "star",                   "⭐" },
+	{ "sunglasses",             "😎" },
+	{ "sweat_smile",            "😅" },
+	{ "tada",                   "🎉" },
+	{ "thinking",               "🤔" },
+	{ "thumbsdown",             "👎" },
+	{ "thumbsup",               "👍" },
+	{ "tongue",                 "😛" },
+	{ "trophy",                 "🏆" },
+	{ "turtle",                 "🐢" },
+	{ "tv",                     "📺" },
+	{ "umbrella",               "☔" },
+	{ "unlock",                 "🔓" },
+	{ "warning",                "⚠️" },
+	{ "wave",                   "👋" },
+	{ "white_check_mark",       "✅" },
+	{ "wink",                   "😉" },
+	{ "wrench",                 "🔧" },
+	{ "x",                      "❌" },
+	{ "zap",                    "⚡" },
+	{ NULL,                     NULL }
+};
+
+
+const char *
+mulle_hoedown_emoji_lookup(const uint8_t *name, size_t length)
+{
+	const char   *emoji_name;
+	size_t       i;
+	size_t       emoji_length;
+
+	for (i = 0; (emoji_name = mulle_hoedown_emojis[i].name) != NULL; i++) {
+		emoji_length = strlen(emoji_name);
+		if (emoji_length == length && memcmp(name, emoji_name, length) == 0)
+			return mulle_hoedown_emojis[i].utf8;
+	}
+
+	return NULL;
+}
+
+
 mulle_hoedown_html_tag
 mulle_hoedown_html_is_tag(const uint8_t *data, size_t size, const char *tagname)
 {
@@ -312,14 +459,63 @@ rndr_list(mulle_hoedown_buffer *ob, const mulle_hoedown_buffer *content, mulle_h
 static void
 rndr_listitem(mulle_hoedown_buffer *ob, const mulle_hoedown_buffer *content, mulle_hoedown_list_flags flags, const mulle_hoedown_renderer_data *data)
 {
-	HOEDOWN_BUFPUTSL(ob, "<li>");
-	if (content) {
-		size_t size = content->size;
-		while (size && content->data[size - 1] == '\n')
-			size--;
+	mulle_hoedown_html_renderer_state *state = data->opaque;
+	const uint8_t *item = NULL;
+	size_t size = 0;
 
-		mulle_hoedown_buffer_put(ob, content->data, size);
+	if (content) {
+		size = content->size;
+		item = content->data;
+
+		while (size && item[size - 1] == '\n')
+			size--;
 	}
+
+	if (state->flags & HOEDOWN_HTML_USE_TASK_LIST) {
+		const uint8_t *scan = item;
+		size_t scan_size = size;
+		int is_task = 0;
+		int is_checked = 0;
+
+		while (scan_size && *scan == ' ') {
+			scan++;
+			scan_size--;
+		}
+
+		if (scan_size >= 3 && scan[0] == '[' && scan[2] == ']') {
+			if (scan[1] == ' ') {
+				is_task = 1;
+			} else if (scan[1] == 'x' || scan[1] == 'X') {
+				is_task = 1;
+				is_checked = 1;
+			}
+		}
+
+		if (is_task) {
+			item = scan + 3;
+			size = scan_size - 3;
+
+			/* drop a single separating space, if present */
+			if (size && *item == ' ') {
+				item++;
+				size--;
+			}
+
+			HOEDOWN_BUFPUTSL(ob, "<li class=\"task-list-item\">");
+			HOEDOWN_BUFPUTSL(ob, "<input type=\"checkbox\"");
+			if (is_checked)
+				HOEDOWN_BUFPUTSL(ob, " checked");
+			HOEDOWN_BUFPUTSL(ob, " disabled> ");
+		} else {
+			HOEDOWN_BUFPUTSL(ob, "<li>");
+		}
+	} else {
+		HOEDOWN_BUFPUTSL(ob, "<li>");
+	}
+
+	if (content)
+		mulle_hoedown_buffer_put(ob, item, size);
+
 	HOEDOWN_BUFPUTSL(ob, "</li>\n");
 }
 

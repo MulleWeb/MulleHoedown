@@ -40,4 +40,10 @@
 
 - (NSString *) hoedownedString;
 
+// add 0x10000 on flags to convert local markdown (.md) links to HTML links
+// (.html). See NSData+MulleHoedown.h for the available flags and extensions.
+- (NSString *) hoedownedStringWithHTMLFlags:(NSUInteger) flags
+                                 extensions:(NSUInteger) extensions
+                                  tocIndent:(NSUInteger) indent;
+
 @end

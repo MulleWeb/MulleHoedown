@@ -1,0 +1,6 @@
+<ul>
+<li class="task-list-item"><input type="checkbox" disabled> todo</li>
+<li class="task-list-item"><input type="checkbox" checked disabled> done</li>
+<li>plain</li>
+</ul>
+

@@ -40,6 +40,7 @@
 #include <stdio.h>
 
 #include "stack.h"
+#include "html.h"
 
 #ifndef _MSC_VER
 #include <strings.h>
@@ -113,6 +114,7 @@ static size_t char_autolink_www(mulle_hoedown_buffer *ob, mulle_hoedown_document
 static size_t char_link(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, size_t offset, size_t size);
 static size_t char_superscript(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, size_t offset, size_t size);
 static size_t char_math(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, size_t offset, size_t size);
+static size_t char_emoji(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, size_t offset, size_t size);
 
 enum markdown_char_t {
 	MD_CHAR_NONE = 0,
@@ -128,7 +130,8 @@ enum markdown_char_t {
 	MD_CHAR_AUTOLINK_WWW,
 	MD_CHAR_SUPERSCRIPT,
 	MD_CHAR_QUOTE,
-	MD_CHAR_MATH
+	MD_CHAR_MATH,
+	MD_CHAR_EMOJI
 };
 
 static char_trigger markdown_char_ptrs[] = {
@@ -145,7 +148,8 @@ static char_trigger markdown_char_ptrs[] = {
 	&char_autolink_www,
 	&char_superscript,
 	&char_quote,
-	&char_math
+	&char_math,
+	&char_emoji
 };
 
 struct mulle_hoedown_document {
@@ -493,7 +497,7 @@ tag_length(uint8_t *data, size_t size, mulle_hoedown_autolink_type *autolink)
 static void
 parse_inline(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, size_t size)
 {
-	size_t i = 0, end = 0;
+	size_t i = 0, end = 0, consumed = 0;
 	mulle_hoedown_buffer work = { 0, 0, 0, 0, NULL, NULL, NULL };
 	uint8_t *active_char = doc->active_char;
 
@@ -517,12 +521,13 @@ parse_inline(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *dat
 		if (end >= size) break;
 		i = end;
 
-		end = markdown_char_ptrs[ (int)active_char[data[end]] ](ob, doc, data + i, i, size - i);
+		end = markdown_char_ptrs[ (int)active_char[data[end]] ](ob, doc, data + i, i - consumed, size - i);
 		if (!end) /* no action from the callback */
 			end = i + 1;
 		else {
 			i += end;
 			end = i;
+			consumed = i;
 		}
 	}
 }
@@ -582,7 +587,7 @@ find_emph_char(uint8_t *data, size_t size, uint8_t c)
 			}
 
 			/* not a well-formed codespan; use found matching emph char */
-			if (i >= size) return tmp_i;
+			if (bt < span_nb && i >= size) return tmp_i;
 		}
 		/* skipping a link */
 		else if (data[i] == '[') {
@@ -653,14 +658,16 @@ parse_emph1(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data
 		if (data[i] == c && !_isspace(data[i - 1])) {
 
 			if (doc->ext_flags & HOEDOWN_EXT_NO_INTRA_EMPHASIS) {
-				if (i + 1 < size && isalnum(data[i + 1]))
+				if ((c == '*' || c == '_') && i + 1 < size && isalnum(data[i + 1]))
 					continue;
 			}
 
 			work = newbuf(doc, BUFFER_SPAN);
 			parse_inline(work, doc, data, i);
 
-			if (doc->ext_flags & HOEDOWN_EXT_UNDERLINE && c == '_')
+			if (c == '~')
+				r = doc->md.strikethrough(ob, work, &doc->data);
+			else if (doc->ext_flags & HOEDOWN_EXT_UNDERLINE && c == '_')
 				r = doc->md.underline(ob, work, &doc->data);
 			else
 				r = doc->md.emphasis(ob, work, &doc->data);
@@ -797,14 +804,18 @@ char_emphasis(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *da
 	size_t ret;
 
 	if (doc->ext_flags & HOEDOWN_EXT_NO_INTRA_EMPHASIS) {
-		if (offset > 0 && !_isspace(data[-1]) && data[-1] != '>' && data[-1] != '(')
+		/* GFM still allows intraword strikethrough, so restrict this to
+		 * the emphasis characters */
+		if ((c == '*' || c == '_') &&
+		    offset > 0 && !_isspace(data[-1]) && data[-1] != '>' && data[-1] != '(')
 			return 0;
 	}
 
 	if (size > 2 && data[1] != c) {
 		/* spacing cannot follow an opening emphasis;
-		 * strikethrough and highlight only takes two characters '~~' */
-		if (c == '~' || c == '=' || _isspace(data[1]) || (ret = parse_emph1(ob, doc, data + 1, size - 1, c)) == 0)
+		 * highlight only takes two characters '==',
+		 * strikethrough also accepts a single '~' (GFM) */
+		if (c == '=' || _isspace(data[1]) || (ret = parse_emph1(ob, doc, data + 1, size - 1, c)) == 0)
 			return 0;
 
 		return ret + 1;
@@ -944,6 +955,19 @@ char_escape(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data
 	size_t w;
 
 	if (size > 1) {
+		/* backslash at the end of a line is a hard line break (CommonMark) */
+		if (data[1] == '\n') {
+			if (doc->md.linebreak)
+				return doc->md.linebreak(ob, &doc->data) ? 2 : 0;
+			return 0;
+		}
+
+		if (data[1] == '\r' && size > 2 && data[2] == '\n') {
+			if (doc->md.linebreak)
+				return doc->md.linebreak(ob, &doc->data) ? 3 : 0;
+			return 0;
+		}
+
 		if (data[1] == '\\' && (doc->ext_flags & HOEDOWN_EXT_MATH) &&
 			size > 2 && (data[2] == '(' || data[2] == '[')) {
 			const char *end = (data[2] == '[') ? "\\\\]" : "\\\\)";
@@ -1220,8 +1244,10 @@ char_link(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, 
 			link_e--;
 
 		/* remove optional angle brackets around the link */
-		if (data[link_b] == '<') link_b++;
-		if (data[link_e - 1] == '>') link_e--;
+		if (data[link_b] == '<' && data[link_e - 1] == '>') {
+			link_b++;
+			link_e--;
+		}
 
 		/* building escaped link and title */
 		if (link_e > link_b) {
@@ -1367,6 +1393,37 @@ char_math(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, 
 	/* single dollar allowed only with MATH_EXPLICIT flag */
 	if (doc->ext_flags & HOEDOWN_EXT_MATH_EXPLICIT)
 		return parse_math(ob, doc, data, offset, size, "$", 1, 0);
+
+	return 0;
+}
+
+
+/* char_emoji • ':name:' emoji shortcodes, falling back to URL autolinks */
+static size_t
+char_emoji(mulle_hoedown_buffer *ob, mulle_hoedown_document *doc, uint8_t *data, size_t offset, size_t size)
+{
+	const char   *emoji;
+	size_t       i;
+
+	/* data[0] == ':' */
+	for (i = 1; i < size && i <= 64; i++) {
+		uint8_t c = data[i];
+
+		if (isalnum(c) || c == '_' || c == '+' || c == '-')
+			continue;
+		break;
+	}
+
+	if (i > 1 && i < size && data[i] == ':') {
+		emoji = mulle_hoedown_emoji_lookup(data + 1, i - 1);
+		if (emoji) {
+			mulle_hoedown_buffer_puts(ob, emoji);
+			return i + 1;
+		}
+	}
+
+	if (doc->ext_flags & HOEDOWN_EXT_AUTOLINK)
+		return char_autolink_url(ob, doc, data, offset, size);
 
 	return 0;
 }
@@ -2258,7 +2315,9 @@ parse_table_row(
 		cell_start = i;
 
 		len = find_emph_char(data + i, size - i, '|');
-		i += len ? len : size - i;
+		if (len == 0 && i < size && data[i] != '|')
+			len = size - i;
+		i += len;
 
 		cell_end = i - 1;
 
@@ -2816,6 +2875,9 @@ mulle_hoedown_document_new(
 		doc->active_char['@'] = MD_CHAR_AUTOLINK_EMAIL;
 		doc->active_char['w'] = MD_CHAR_AUTOLINK_WWW;
 	}
+
+	if (extensions & HOEDOWN_EXT_EMOJI)
+		doc->active_char[':'] = MD_CHAR_EMOJI;
 
 	if (extensions & HOEDOWN_EXT_SUPERSCRIPT)
 		doc->active_char['^'] = MD_CHAR_SUPERSCRIPT;

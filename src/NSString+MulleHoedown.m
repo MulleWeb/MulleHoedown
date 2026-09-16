@@ -51,4 +51,20 @@
    return( s);
 }
 
+
+- (NSString *) hoedownedStringWithHTMLFlags:(NSUInteger) flags
+                                 extensions:(NSUInteger) extensions
+                                  tocIndent:(NSUInteger) indent
+{
+   NSData     *data;
+   NSString   *s;
+
+   data = [[self dataUsingEncoding:NSUTF8StringEncoding] hoedownedDataWithHTMLFlags:flags
+                                                                          extensions:extensions
+                                                                           tocIndent:indent];
+   s    = [[[NSString alloc] initWithData:data
+                                 encoding:NSUTF8StringEncoding] autorelease];
+   return( s);
+}
+
 @end

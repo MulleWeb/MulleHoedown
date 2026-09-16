@@ -1,0 +1,2 @@
+<p><a href="foo%3E">a</a> and <a href="%3Cbar">b</a> and <a href="b%20c">c</a></p>
+

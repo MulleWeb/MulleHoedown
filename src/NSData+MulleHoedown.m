@@ -140,8 +140,8 @@ static int
 
 - (NSData *) hoedownedData
 {
-   return( [self hoedownedDataWithHTMLFlags:0x10000
-                                 extensions:HOEDOWN_EXT_BLOCK|HOEDOWN_EXT_SPAN
+   return( [self hoedownedDataWithHTMLFlags:HOEDOWN_HTML_USE_TASK_LIST|0x10000
+                                 extensions:HOEDOWN_EXT_BLOCK|HOEDOWN_EXT_SPAN|HOEDOWN_EXT_NO_INTRA_EMPHASIS|HOEDOWN_EXT_SPACE_HEADERS|HOEDOWN_EXT_MATH_EXPLICIT
                                   tocIndent:0]);
 }
 

@@ -63,6 +63,7 @@ typedef enum mulle_hoedown_extensions {
 	HOEDOWN_EXT_QUOTE = (1 << 7),
 	HOEDOWN_EXT_SUPERSCRIPT = (1 << 8),
 	HOEDOWN_EXT_MATH = (1 << 9),
+	HOEDOWN_EXT_EMOJI = (1 << 10),
 
 	/* other flags */
 	HOEDOWN_EXT_NO_INTRA_EMPHASIS = (1 << 11),
@@ -85,7 +86,8 @@ typedef enum mulle_hoedown_extensions {
 	HOEDOWN_EXT_HIGHLIGHT |\
 	HOEDOWN_EXT_QUOTE |\
 	HOEDOWN_EXT_SUPERSCRIPT |\
-	HOEDOWN_EXT_MATH )
+	HOEDOWN_EXT_MATH |\
+	HOEDOWN_EXT_EMOJI )
 
 #define HOEDOWN_EXT_FLAGS (\
 	HOEDOWN_EXT_NO_INTRA_EMPHASIS |\

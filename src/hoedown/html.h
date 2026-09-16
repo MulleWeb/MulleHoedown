@@ -53,7 +53,8 @@ typedef enum mulle_hoedown_html_flags {
 	HOEDOWN_HTML_SKIP_HTML = (1 << 0),
 	HOEDOWN_HTML_ESCAPE = (1 << 1),
 	HOEDOWN_HTML_HARD_WRAP = (1 << 2),
-	HOEDOWN_HTML_USE_XHTML = (1 << 3)
+	HOEDOWN_HTML_USE_XHTML = (1 << 3),
+	HOEDOWN_HTML_USE_TASK_LIST = (1 << 4)
 } mulle_hoedown_html_flags;
 
 typedef enum mulle_hoedown_html_tag {
@@ -94,6 +95,9 @@ void mulle_hoedown_html_smartypants(mulle_hoedown_buffer *ob, const uint8_t *dat
 
 /* mulle_hoedown_html_is_tag: checks if data starts with a specific tag, returns the tag type or NONE */
 mulle_hoedown_html_tag mulle_hoedown_html_is_tag(const uint8_t *data, size_t size, const char *tagname);
+
+/* mulle_hoedown_emoji_lookup: map a shortcode name (without colons) to its UTF-8 emoji or NULL */
+const char *mulle_hoedown_emoji_lookup(const uint8_t *name, size_t length);
 
 
 /* mulle_hoedown_html_renderer_new: allocates a regular HTML renderer */

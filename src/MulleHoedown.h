@@ -37,6 +37,28 @@
 #import "NSData+MulleHoedown.h"
 #import "NSString+MulleHoedown.h"
 
+/*
+ * MulleHoedown wraps hoedown 3.0.1, a pre-CommonMark Markdown parser that
+ * Mulle kybernetiK extended and maintains.
+ *
+ * IMPORTANT: This is NOT a CommonMark or GitHub Flavored Markdown compliant
+ * parser. It predates the CommonMark specification and its output can differ
+ * from reference implementations for, among other things, emphasis and
+ * strong emphasis, intraword underscores, list syntax, link destinations and
+ * HTML blocks. Do not rely on byte-for-byte compatibility with GitHub or with
+ * a CommonMark reference implementation.
+ *
+ * The following extensions are enabled by default: tables, fenced code,
+ * footnotes, autolinks, strikethrough (~~ and ~), underline, highlight,
+ * quote, superscript, math, emoji, no intra-word emphasis and space-required
+ * headers. The HTML renderer additionally supports GFM task lists.
+ *
+ * Callers that need different rendering can select raw HTML handling and
+ * other HTML renderer flags per conversion with the
+ * hoedownedDataWithHTMLFlags:extensions:tocIndent: and
+ * hoedownedStringWithHTMLFlags:extensions:tocIndent: methods.
+ */
+
 #define MULLE_HOEDOWN_VERSION ((0UL << 20) | (5 << 8) | 2)
 
 
