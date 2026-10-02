@@ -35,8 +35,17 @@
 //
 #import "import.h"
 
+#import "NSData+MulleHoedown.h"
+
 
 @interface NSString( MulleHoedown)
+
+/* the backend-neutral API shared with MulleCMarkGFM */
+- (NSString *) markdownedString;
+
+- (NSString *) markdownedStringWithHTMLFlags:(NSUInteger) flags
+                                  extensions:(NSUInteger) extensions
+                                   tocIndent:(NSUInteger) indent;
 
 - (NSString *) hoedownedString;
 

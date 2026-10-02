@@ -146,5 +146,21 @@ static int
 }
 
 
+- (NSData *) markdownedDataWithHTMLFlags:(NSUInteger) flags
+                              extensions:(NSUInteger) extensions
+                               tocIndent:(NSUInteger) indent
+{
+   return( [self hoedownedDataWithHTMLFlags:flags
+                                 extensions:extensions
+                                  tocIndent:indent]);
+}
+
+
+- (NSData *) markdownedData
+{
+   return( [self hoedownedData]);
+}
+
+
 @end
 

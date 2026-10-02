@@ -1,15 +1,23 @@
 ## API
 
-MulleHowdown adds the following conversion method to **NSString**:
+The API shared with [MulleCMarkGFM](//github.com/MulleWeb/MulleCMarkGFM)
+is:
+
+``` objc
+- (NSString *) markdownedString;
+- (NSData *) markdownedData;
+```
+
+plus the flagged variants `markdownedStringWithHTMLFlags:extensions:tocIndent:`
+and `markdownedDataWithHTMLFlags:extensions:tocIndent:`. The method names and
+flags are shared with MulleCMarkGFM, so source can be moved between the two;
+each backend renders with its own native rules, so the output is not meant to be
+identical. The flags are the `MULLE_MARKDOWN_HTML_*` and `MULLE_MARKDOWN_EXT_*`
+constants.
+
+MulleHoedown also keeps its original methods:
 
 ``` objc
 - (NSString *) hoedownedString;
-```
-
-and adds the following conversion method to **NSData**:
-
-``` objc
 - (NSData *) hoedownedData;
 ```
-
-

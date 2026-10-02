@@ -59,7 +59,7 @@
  * hoedownedStringWithHTMLFlags:extensions:tocIndent: methods.
  */
 
-#define MULLE_HOEDOWN_VERSION ((0UL << 20) | (5 << 8) | 2)
+#define MULLE_HOEDOWN_VERSION ((0UL << 20) | (6 << 8) | 0)
 
 
 #ifdef __has_include

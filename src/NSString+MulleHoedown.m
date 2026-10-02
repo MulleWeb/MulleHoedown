@@ -60,11 +60,27 @@
    NSString   *s;
 
    data = [[self dataUsingEncoding:NSUTF8StringEncoding] hoedownedDataWithHTMLFlags:flags
-                                                                          extensions:extensions
-                                                                           tocIndent:indent];
+                                                                           extensions:extensions
+                                                                            tocIndent:indent];
    s    = [[[NSString alloc] initWithData:data
-                                 encoding:NSUTF8StringEncoding] autorelease];
+                                   encoding:NSUTF8StringEncoding] autorelease];
    return( s);
+}
+
+
+- (NSString *) markdownedStringWithHTMLFlags:(NSUInteger) flags
+                                  extensions:(NSUInteger) extensions
+                                   tocIndent:(NSUInteger) indent
+{
+   return( [self hoedownedStringWithHTMLFlags:flags
+                                   extensions:extensions
+                                    tocIndent:indent]);
+}
+
+
+- (NSString *) markdownedString
+{
+   return( [self hoedownedString]);
 }
 
 @end
