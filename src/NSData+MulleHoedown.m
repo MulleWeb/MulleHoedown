@@ -49,6 +49,27 @@
 @implementation NSData( MulleHoedown)
 
 
+static int
+   buffer_contains_string( const mulle_hoedown_buffer *buf, const char *s)
+{
+   size_t   i;
+   size_t   n;
+   size_t   slen;
+
+   slen = strlen( s);
+   if( buf->size < slen)
+      return( 0);
+
+   n = buf->size - slen;
+   for( i = 0; i <= n; i++)
+   {
+      if( memcmp( &buf->data[ i], s, slen) == 0)
+         return( 1);
+   }
+   return( 0);
+}
+
+
 // Custom link rendering function
 // Custom link rendering function
 static int
@@ -66,7 +87,7 @@ static int
       return(0);
 
    link_size = link->size;
-   is_local  = (strstr((char *)link->data, "://") == NULL);
+   is_local  = ! buffer_contains_string( link, "://");
 
    new_link = mulle_hoedown_buffer_new(64);
 

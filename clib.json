@@ -1,6 +1,6 @@
 {
    "name" : "MulleHoedown",
-   "version" : "0.5.2",
+   "version" : "0.6.0",
    "description" : "💃🏼 Markdown support for mulle-objc",
    "keywords" : [],
    "license" : "UNLICENSED",
@@ -43,6 +43,6 @@
    ],
    "dependencies" : {
       "MulleFoundation/MulleFoundationBase": "*",
-      "mulle-objc/mulle-objc-list": "*"
+      "mulle-objc/mulle-objc-tools": "*"
    }
 }
