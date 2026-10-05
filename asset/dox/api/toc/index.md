@@ -18,9 +18,21 @@
 
 ### 3.1. [src/NSString+MulleHoedown.h]
 
-- Method: - (NSString *) hoedownedString;
-  - Purpose: Convert the NSString's Markdown content into an HTML NSString using default flags.
-  - Usage: simplest entrypoint for Cocoa consumers (see test/20_features/minus.m / star.m).
+- Methods:
+  - - (NSString *) hoedownedString;
+    - Purpose: Convert the NSString's Markdown content into an HTML NSString using default flags.
+    - Usage: simplest entrypoint for Cocoa consumers (see test/20_features/minus.m / star.m).
+  - - (NSString *) hoedownedStringWithHTMLFlags:(NSUInteger) flags
+                                   extensions:(NSUInteger) extensions
+                                    tocIndent:(NSUInteger) indent;
+    - Purpose: Full control conversion: render flags, extension bits and TOC indentation. See NSData+MulleHoedown.h for the available flags and extensions.
+    - Note: Adding 0x10000 (MULLE_MARKDOWN_HTML_LOCAL_LINKS) on flags converts local markdown (.md) links to HTML (.html) links.
+  - - (NSString *) markdownedString;
+    - Purpose: Backend-neutral API shared with MulleCMarkGFM; same as hoedownedString but portable across backends. Output is not meant to be byte-identical between backends.
+  - - (NSString *) markdownedStringWithHTMLFlags:(NSUInteger) flags
+                                     extensions:(NSUInteger) extensions
+                                      tocIndent:(NSUInteger) indent;
+    - Purpose: Backend-neutral full control variant of hoedownedStringWithHTMLFlags:extensions:tocIndent:.
 
 ### 3.2. [src/NSData+MulleHoedown.h]
 
@@ -32,12 +44,23 @@
                               tocIndent:(NSUInteger) indent;
     - Purpose: Full control conversion: render flags (escape, xhtml, hardwrap), extension bits and TOC indentation.
     - Note: The low 16 bits of `flags` are passed to the HTML renderer. Setting bit 0x10000 makes the renderer rewrite local ".md" links to ".html" (via a custom link callback).
+  - - (NSData *) markdownedData;
+    - Purpose: Backend-neutral API shared with MulleCMarkGFM; same as hoedownedData but portable across backends. Output is not meant to be byte-identical between backends.
+  - - (NSData *) markdownedDataWithHTMLFlags:(NSUInteger) flags
+                                 extensions:(NSUInteger) extensions
+                                  tocIndent:(NSUInteger) indent;
+    - Purpose: Backend-neutral full control variant of hoedownedDataWithHTMLFlags:extensions:tocIndent:.
+- MULLE_MARKDOWN_* flags: backend-neutral equivalents of the HOEDOWN_* flags (same numeric values, either spelling accepted by the conversion methods). Guarded so this header and MulleCMarkGFM's can coexist.
+  - HTML flags: MULLE_MARKDOWN_HTML_SKIP_HTML, MULLE_MARKDOWN_HTML_ESCAPE, MULLE_MARKDOWN_HTML_HARD_WRAP, MULLE_MARKDOWN_HTML_USE_XHTML, MULLE_MARKDOWN_HTML_USE_TASK_LIST, MULLE_MARKDOWN_HTML_USE_EMOJI, and MULLE_MARKDOWN_HTML_LOCAL_LINKS (1UL << 16; convert local .md links to .html).
+  - Extension flags: MULLE_MARKDOWN_EXT_TABLES, _FENCED_CODE, _FOOTNOTES, _AUTOLINK, _STRIKETHROUGH, _UNDERLINE, _HIGHLIGHT, _QUOTE, _SUPERSCRIPT, _MATH, _EMOJI, _NO_INTRA_EMPHASIS, _SPACE_HEADERS, _MATH_EXPLICIT, _DISABLE_INDENTED_CODE, _TAGFILTER. Predefined groups: MULLE_MARKDOWN_EXT_BLOCK, MULLE_MARKDOWN_EXT_SPAN, MULLE_MARKDOWN_EXT_GFM.
 
 ### 3.3. [src/MulleHoedown.h]
 
 - Umbrella header that imports "import.h", "NSData+MulleHoedown.h", "NSString+MulleHoedown.h".
-- Macro MULLE_HOEDOWN_VERSION: (0.5.2) encoded as ((major << 20) | (minor << 8) | revision).
+- Macro MULLE_HOEDOWN_VERSION: (0.6.0) encoded as ((major << 20) | (minor << 8) | revision).
 - Include this header (or the two category headers) for the Objective-C API.
+- Important: wraps hoedown 3.0.1, a pre-CommonMark Markdown parser; NOT CommonMark or GitHub Flavored Markdown compliant. Output may differ from reference implementations (emphasis, intraword underscores, list syntax, link destinations, HTML blocks).
+- Default extensions: tables, fenced code, footnotes, autolinks, strikethrough (~~ and ~), underline, highlight, quote, superscript, math, emoji, no intra-word emphasis and space-required headers. The HTML renderer additionally supports GFM task lists.
 
 ### 3.4. [src/MulleObjCDeps+MulleHoedown.h]
 
@@ -50,7 +73,7 @@
 - Types:
   - mulle_hoedown_document: opaque document processor instance.
   - mulle_hoedown_renderer: struct of callbacks used to render parsed nodes (blockcode, header, list, link, image, emphasis, math, etc.). NULL callback pointer skips the block; for span callbacks NULL or return 0 prints the span verbatim.
-  - mulle_hoedown_extensions: bitflags to enable features (HOEDOWN_EXT_TABLES, HOEDOWN_EXT_FENCED_CODE, HOEDOWN_EXT_AUTOLINK, etc.). Predefined groups: HOEDOWN_EXT_BLOCK, HOEDOWN_EXT_SPAN, HOEDOWN_EXT_FLAGS, HOEDOWN_EXT_NEGATIVE.
+  - mulle_hoedown_extensions: bitflags to enable features (HOEDOWN_EXT_TABLES, HOEDOWN_EXT_FENCED_CODE, HOEDOWN_EXT_AUTOLINK, HOEDOWN_EXT_EMOJI, etc.). Predefined groups: HOEDOWN_EXT_BLOCK, HOEDOWN_EXT_SPAN, HOEDOWN_EXT_FLAGS, HOEDOWN_EXT_NEGATIVE.
 
 - Lifecycle functions:
   - mulle_hoedown_document *mulle_hoedown_document_new(const mulle_hoedown_renderer *renderer, mulle_hoedown_extensions extensions, size_t max_nesting);
@@ -88,13 +111,13 @@
 
 ### 3.7. [src/hoedown/html.h]
 
-- HTML renderer flags: HOEDOWN_HTML_SKIP_HTML, HOEDOWN_HTML_ESCAPE, HOEDOWN_HTML_HARD_WRAP, HOEDOWN_HTML_USE_XHTML (enum mulle_hoedown_html_flags).
+- HTML renderer flags: HOEDOWN_HTML_SKIP_HTML, HOEDOWN_HTML_ESCAPE, HOEDOWN_HTML_HARD_WRAP, HOEDOWN_HTML_USE_XHTML, HOEDOWN_HTML_USE_TASK_LIST (enum mulle_hoedown_html_flags).
 - Constructors:
   - mulle_hoedown_renderer *mulle_hoedown_html_renderer_new(mulle_hoedown_html_flags render_flags, int nesting_level);
   - mulle_hoedown_renderer *mulle_hoedown_html_toc_renderer_new(int nesting_level);
   - void mulle_hoedown_html_renderer_free(mulle_hoedown_renderer *renderer);
 - Struct mulle_hoedown_html_renderer_state: holds render state (toc_data, flags, optional link_attributes callback).
-- Utilities: void mulle_hoedown_html_smartypants(mulle_hoedown_buffer *ob, const uint8_t *data, size_t size); mulle_hoedown_html_tag mulle_hoedown_html_is_tag(const uint8_t *data, size_t size, const char *tagname).
+- Utilities: void mulle_hoedown_html_smartypants(mulle_hoedown_buffer *ob, const uint8_t *data, size_t size); mulle_hoedown_html_tag mulle_hoedown_html_is_tag(const uint8_t *data, size_t size, const char *tagname); const char *mulle_hoedown_emoji_lookup(const uint8_t *name, size_t length) (map a shortcode name without colons to its UTF-8 emoji or NULL).
 
 ## 4. Performance Characteristics
 
