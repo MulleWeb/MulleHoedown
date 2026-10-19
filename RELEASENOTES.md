@@ -2,6 +2,18 @@
 
 
 
+
+
+
+
+* Document the backend-neutral `markdownedString`/`markdownedData` methods and their full-control variants in NSString and NSData categories.
+* Document the ``MULLE_MARKDOWN_*`` HTML and extension flags as backend-neutral equivalents of the ``HOEDOWN_*`` flags.
+* Note new HTML renderer flags `(`MULLE_MARKDOWN_HTML_USE_TASK_LIST`,` ``HOEDOWN_HTML_USE_TASK_LIST`)` and the ``mulle_hoedown_emoji_lookup`` utility.
+* Clarify that the wrapped hoedown 3.0.1 parser is pre-CommonMark and document default extensions.
+
+
+
+
 * Document the backend-neutral `markdownedString`/`markdownedData` methods and their full-control variants in NSString and NSData categories.
 * Document the ``MULLE_MARKDOWN_*`` HTML and extension flags as backend-neutral equivalents of the ``HOEDOWN_*`` flags.
 * Note new HTML renderer flags `(`MULLE_MARKDOWN_HTML_USE_TASK_LIST`,` ``HOEDOWN_HTML_USE_TASK_LIST`)` and the ``mulle_hoedown_emoji_lookup`` utility.
